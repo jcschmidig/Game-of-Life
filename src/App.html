@@ -1,0 +1,63 @@
+<!--
+	Web App to simulate
+	---------------------
+	Conway's Game of Life
+	(see https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
+	---------------------
+	by jean-claude@schmidig.email
+-->
+<header>
+	<h1><a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
+		   target=_blank>Conways's Game of Life</a></h1></header>
+<Start {defDimension} {dimMin} {dimMax}
+	   on:clear={clear} on:create={create}/>
+<hr/>
+<Game {status} {calc} showTitle={show.title} {showDiff}
+	  on:click={next}/>
+<hr/>
+<Board {rows} on:flip={flip}
+	   on:measure={measureRun} on:unmeasure={measureStop}/>
+
+<script>
+    import Start from './Start.html'
+    import Game from './Game.html'
+    import Board, { createBoard } from './Board.html'
+	import { createMeasure } from './common/Measure.html'
+	//
+	let board, rows = [], status, showDiff
+	const
+		[ defDimension, dimMin, dimMax ] =
+			[ 15, 3, Math.floor(Math.sqrt(100000)) ],
+		calc = createMeasure("Calc"),
+		show = createMeasure("Display")
+
+	/*** Observables ***/
+	$:  if (board) {
+			rows = board.rows
+			status = {
+				size: board.size,
+				generation: board.generation(),
+				isReady: board.isReady(),
+				countState: board.countState,
+				countChangedState: board.countChangedState
+			}
+		}
+
+	/*** events ***/
+	const
+		evt = (action, newBoard=false) =>
+			(event, prop=event.detail, dim=prop) =>
+				( board = newBoard && createBoard(dim, calc) || board )
+					[action](prop),
+		//
+		// Issued by component Input
+		clear = evt("clear", true),
+		create = evt("create", true),
+		// Issued by component Game
+	    next = evt("next"),
+		// Issued by component Field
+	    flip = evt("flip"),
+		// Issued by component Board
+		measureRun = () => show.start(),
+		measureStop = () => showDiff = show.stop()
+</script>
