@@ -54,9 +54,9 @@
 					(_, idx) => createField(idx) ),
 			_row = _index => Math.floor(_index/dimension),
 			_col = _index => _index%dimension,
-			rows = _fields.reduce( (acc, field) =>
-				// works because _col always starts at zero!
-				( _col(field.index)
+			rows = _fields.reduce( (acc, field, idx) =>
+				// works because idx always starts at zero!
+				( _col(idx)
 					? acc[acc.length-1].push(field)
 					: acc.push([field]),
 				  acc ), [] ),
