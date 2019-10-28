@@ -9,7 +9,7 @@ Node and npm are used to compile the web application to pure html.
 
 ## Installation
 Use https://github.com/jcschmidig/Game-of-Life.git to clone the app from GitHub
-npm Install
+npm Install 
 
 ## Compile
 npm run build
