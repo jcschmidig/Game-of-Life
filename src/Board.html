@@ -86,7 +86,7 @@
 	            _fields.map( (field, idx) =>
 					field.setState(newStates[idx]) ),
 	            //
-				generation = ++generation ),
+				generation += 1 ),
 			//
 			_nextState = (state, count) =>
 			 	+( (count === 3) || (count === 2) && state ),
