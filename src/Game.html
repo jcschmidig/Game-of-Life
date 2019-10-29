@@ -53,16 +53,15 @@
     /*** Observables ***/
     let _alive, _dead, _birth, _death,
         _timeCalc, _showgen="-", _nextEnabled
-    $: {
-        status && (
-            _alive = status.countState(fState.alive),
-            _dead = status.size - _alive,
-            _birth = status.countChangedState(fState.alive),
-            _death = status.countChangedState(fState.dead),
-            _timeCalc = calc.diff(),
-            _showgen = (status.generation === "") ? "-" : status.generation,
-			_showName = "+ Generation (" + _showgen + ")",
-            _nextEnabled = status.isReady || _birth || _death )
+    $: if (status) {
+            _alive = status.countState(fState.alive)
+            _dead = status.size - _alive
+            _birth = status.countChangedState(fState.alive)
+            _death = status.countChangedState(fState.dead)
+            _timeCalc = calc.diff()
+            _showgen = (status.generation === "") ? "-" : status.generation
+			_showName = "+ Generation (" + _showgen + ")"
+            _nextEnabled = status.isReady || _birth || _death
         }
 	$: _showName = "+ Generation (" + _showgen + ")"
 </script>
