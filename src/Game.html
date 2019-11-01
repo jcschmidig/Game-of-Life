@@ -1,67 +1,93 @@
 <section>
-	<article class=show>
-		<Measure style={__total} title="Total" diff={blank(_birth + _death)}/>
-		<hr/>
-		<Measure style={__birth} title="Birth" diff={blank(_birth)}/>
-		<Measure style={__death} title="Death" diff={blank(_death)}/>
-	</article>
-	<article id=generation>
-		<Button id="next" name={_showName} width="10em" height="5em"
-				style="cursor: copy;"
-				disabled={!_nextEnabled} on:click/>
-	</article>
-	<article class=show>
-		<Measure style={__total} title="Total" diff={blank(_alive + _dead)}/>
-		<hr/>
-		<Measure style={__alive} title="Alive" diff={blank(_alive)}/>
-		<Measure style={__dead} title="Dead" diff={blank(_dead)}/>
-	</article>
-    <article class=show>
-		<div id=time>Time (ms)</div>
-		<hr/>
-		<Measure title={calc.title} diff={_timeCalc}/>
-		<Measure title={showTitle} diff={showDiff}/>
-	</article>
+  <article class="show">
+    <Measure style="{__total}" title="Total" diff="{blank(_birth + _death)}" />
+    <hr />
+    <Measure style="{__birth}" title="Birth" diff="{blank(_birth)}" />
+    <Measure style="{__death}" title="Death" diff="{blank(_death)}" />
+  </article>
+  <article id="generation">
+    <Button
+      id="next"
+      name="{_showName}"
+      width="10em"
+      height="5em"
+      style="cursor: copy;"
+      disabled="{!_nextEnabled}"
+      on:click
+    />
+  </article>
+  <article class="show">
+    <Measure style="{__total}" title="Total" diff="{blank(_alive + _dead)}" />
+    <hr />
+    <Measure style="{__alive}" title="Alive" diff="{blank(_alive)}" />
+    <Measure style="{__dead}" title="Dead" diff="{blank(_dead)}" />
+  </article>
+  <article class="show">
+    <div id="time">Time ({calc.unit})</div>
+    <hr />
+    <Measure title="{calc.title}" diff="{_timeCalc}" />
+    <Measure title="{showTitle}" diff="{showDiff}" />
+  </article>
 </section>
 
 <style>
-    section { min-height: 5.5em; margin-top: 1.5em; }
-    article { float: left; width: 8em; margin-right: .8em; }
-	article#generation { width: auto; }
-    .show { border: 1px solid darkgrey; padding: .2em; }
-    .right { float: right; }
-    div#time { font-style: italic; }
+  section {
+    min-height: 5.5em;
+    margin-top: 1.5em;
+  }
+  article {
+    float: left;
+    width: 8em;
+    margin-right: 0.8em;
+  }
+  article#generation {
+    width: auto;
+  }
+  .show {
+    border: 1px solid darkgrey;
+    padding: 0.2em;
+  }
+  .right {
+    float: right;
+  }
+  div#time {
+    font-style: italic;
+  }
 </style>
 
 <script>
-    import { counter, blank } from './common/Util.html'
-    import { fState } from './Field.html'
-	import Button from './common/Button.html'
-	import Measure from './common/Measure.html'
+  import { blank } from "./common/Util.html";
+  import { fState } from "./Field.html";
+  import Button from "./common/Button.html";
+  import Measure from "./common/Measure.html";
 
-    /*** Default Component Interface ***/
-    export let status, calc, showTitle, showDiff
+  /*** Default Component Interface ***/
+  export let status, calc, showTitle, showDiff;
 
-	/*** measure styles ***/
-	const
-		__total = "font-weight: 900;",
-		__birth = "color: blue;",
-		__death = "color: black;",
-		__alive = "background-color: aqua;",
-		__dead = "background-color: lightgrey;"
+  /*** measure styles ***/
+  const __total = "font-weight: 900;",
+    __birth = "color: blue;",
+    __death = "color: black;",
+    __alive = "background-color: aqua;",
+    __dead = "background-color: lightgrey;";
 
-    /*** Observables ***/
-    let _alive, _dead, _birth, _death,
-        _timeCalc, _showgen="-", _nextEnabled
-    $: if (status) {
-            _alive = status.countState(fState.alive)
-            _dead = status.size - _alive
-            _birth = status.countChangedState(fState.alive)
-            _death = status.countChangedState(fState.dead)
-            _timeCalc = calc.diff()
-            _showgen = (status.generation === "") ? "-" : status.generation
-			_showName = "+ Generation (" + _showgen + ")"
-            _nextEnabled = status.isReady || _birth || _death
-        }
-	$: _showName = "+ Generation (" + _showgen + ")"
+  /*** Observables ***/
+  let _alive,
+    _dead,
+    _birth,
+    _death,
+    _timeCalc,
+    _showgen = "-",
+    _nextEnabled;
+  $: if (status) {
+    _alive = status.countState(fState.alive);
+    _dead = status.size - _alive;
+    _birth = status.countChangedState(fState.alive);
+    _death = status.countChangedState(fState.dead);
+    _timeCalc = calc.diff();
+    _showgen = status.generation === "" ? "-" : status.generation;
+    _showName = "+ Generation (" + _showgen + ")";
+    _nextEnabled = status.isReady || _birth || _death;
+  }
+  $: _showName = "+ Generation (" + _showgen + ")";
 </script>

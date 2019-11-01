@@ -1,40 +1,59 @@
-<section >
-	<label for="dim">Board length</label>
-	<input id="dim" title="between {dimMin} and {dimMax}!"
-		   type="number" min={dimMin} max={dimMax} bind:value={dimension}
-		   on:keyup={keyEnter} on:change={checkDimension}/>
-	<Button name="Create Board" width={buttonWidth} style="margin-right: .7em;"
-			on:click={createBoard}/>
-	<Button name="Clear Board" width={buttonWidth}
-			on:click={clearBoard}/>
+<section>
+  <label for="dim">Board length</label>
+  <input
+    id="dim"
+    title="between {dimMin} and {dimMax}!"
+    type="number"
+    min="{dimMin}"
+    max="{dimMax}"
+    bind:value="{dimension}"
+    on:keyup="{keyEnter}"
+    on:change="{checkDimension}"
+  />
+  <Button
+    name="Create Board"
+    width="{buttonWidth}"
+    style="margin-right: .7em;"
+    on:click="{createBoard}"
+  />
+  <Button name="Clear Board" width="{buttonWidth}" on:click="{clearBoard}" />
 </section>
 
 <style>
-	section { height: 4em; }
-	input { width: 6em; margin-right: 3.1em; text-align: right; }
+  section {
+    height: 4em;
+  }
+  input {
+    width: 6em;
+    margin-right: 3.1em;
+    text-align: right;
+  }
 </style>
 
 <script>
-	import { createEventDispatcher, onMount } from 'svelte'
-	import { setFocus, checkMinMax } from './common/Util.html'
-	import Button from './common/Button.html'
+  import { createEventDispatcher, onMount } from "svelte";
+  import { setFocus, checkMinMax } from "./common/Util.html";
+  import Button from "./common/Button.html";
 
-	/*** Default Component Interface ***/
-	export let defDimension = 12, dimMin = 1, dimMax = 1000
-	let dimension = defDimension
-	const buttonWidth = "13.8em"
+  /*** Default Component Interface ***/
+  export let defDimension = 12,
+    dimMin = 1,
+    dimMax = 1000;
+  let dimension = defDimension;
+  const buttonWidth = "13.8em";
 
-	/*** Events ***/
-	const
-		keyEnter = (ev, key=ev.which) => key === 13 && createBoard(),
-		checkDimension = (ev, dim = ev.target.value) =>
-			void( dimension = checkMinMax(dim, dimMin, dimMax) ),
-		//
-		dispatch = createEventDispatcher(),
-		evt = (action, focus) => ( setFocus(focus), dispatch(action, dimension) ),
-		createBoard = () => evt("create", "next"),
-		clearBoard = () => evt("clear", "dim")
-	//
-	// set the focus to the input element within the start of the page
-	onMount( () => { setFocus('dim') } )
+  /*** Events ***/
+  const keyEnter = (ev, key = ev.which) => key === 13 && createBoard(),
+    checkDimension = (ev, dim = ev.target.value) =>
+      void (dimension = checkMinMax(dim, dimMin, dimMax)),
+    //
+    dispatch = createEventDispatcher(),
+    evt = (action, focus) => (setFocus(focus), dispatch(action, dimension)),
+    createBoard = () => evt("create", "next"),
+    clearBoard = () => evt("clear", "dim");
+  //
+  // set the focus to the input element within the start of the page
+  onMount(() => {
+    setFocus("dim");
+  });
 </script>

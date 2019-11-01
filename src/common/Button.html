@@ -1,22 +1,29 @@
-<button id={id} style={_buttonStyle} {disabled} on:click>{name}</button>
+<button id="{id}" style="{_buttonStyle}" {disabled} on:click>{name}</button>
 
 <style>
-	button:focus { border-color: green; border-width: 2px; }
-    button[disabled] {
-        border: none;
-        background-color: lightgray;
-        cursor: not-allowed !important; }
+  button:focus {
+    border-color: green;
+    border-width: 2px;
+  }
+  button[disabled] {
+    border: none;
+    background-color: lightgray;
+    cursor: not-allowed !important;
+  }
 </style>
 
 <script>
-    /*** Default Component Interface ***/
-    export let
-        id="", name="Submit",
-        width="", height="",
-        style="", disabled=""
+  /*** Default Component Interface ***/
+  export let id = "",
+    name = "Submit",
+    width = "",
+    height = "",
+    style = "",
+    disabled = "";
 
-    /*** Observables ***/
-    $: _buttonStyle = (width ? "width: "+width+"; " : "") +
-                      (height ? "height: "+height+"; " : "") +
-                       style
+  /*** Observables ***/
+  $: _buttonStyle =
+    (width ? "width: " + width + "; " : "") +
+    (height ? "height: " + height + "; " : "") +
+    style;
 </script>

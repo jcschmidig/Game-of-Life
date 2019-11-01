@@ -1,36 +1,41 @@
-<div {style}><span>{title}:</span>
-             <span class=right>{blank(diff)}</span></div>
+<div {style}>
+  <span>{title}:</span> <span class="right">{blank(diff)}</span>
+</div>
 
 <style>
-    .right { float: right; }
+  .right {
+    float: right;
+  }
 </style>
 
 <script>
-    import { blank } from './Util.html'
-    /*** Default Component Interface ***/
-    export let title, diff, style = ""
+  import { blank } from "./Util.html";
+  /*** Default Component Interface ***/
+  export let title,
+    diff,
+    style = "";
 </script>
 
 <script context="module">
-    export const createMeasure = _title => {
-        let _m1, _m2
-        //
-        const
-            title = _title,
-            _now = () => window.performance.now(),
-            start = () => void ( _m1 = _now() ),
-            stop = () => void ( _m2 = _now() ),
-            diff = () => Math.floor( (_m2 - _m1) * 1000 )/1000
-        //
-        /*** Component Interface ***/
-        return {
-            // static getter
-            title,
-            // dynamic getter
-            diff,
-            // setters
-            start,
-            stop: () => ( stop(), diff() )
-        }
-    }
+  export const createMeasure = _title => {
+    let _m1, _m2;
+    //
+    const title = _title,
+      _now = () => window.performance.now(),
+      start = () => void (_m1 = _now()),
+      stop = () => void (_m2 = _now()),
+      diff = () => Math.floor((_m2 - _m1) * 1000) / 1000;
+    //
+    /*** Component Interface ***/
+    return {
+      // static getter
+      title,
+      unit: "ms",
+      // dynamic getter
+      diff,
+      // setters
+      start,
+      stop: () => (stop(), diff())
+    };
+  };
 </script>
