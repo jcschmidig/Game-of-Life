@@ -19,11 +19,12 @@
   },
   "scripts": {
     "lint": "eslint --fix --quiet src --ext .js,.html",
-    "format": "prettier --write '{public,src}/**/*.{css,html,js,svelte}'",
+    "format": "prettier --write '{public,src}/**/*.html'",
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild",
     "start": "sirv public --single",
-    "start:dev": "sirv public --single --dev"
+    "start:dev": "sirv public --single --dev",
+    "go": "run-p format lint build"
   }
 }
