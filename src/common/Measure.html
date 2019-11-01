@@ -9,22 +9,22 @@
 </style>
 
 <script>
-  import { blank } from "./Util.html";
+  import { blank } from "./Util.html"
   /*** Default Component Interface ***/
   export let title,
     diff,
-    style = "";
+    style = ""
 </script>
 
 <script context="module">
   export const createMeasure = _title => {
-    let _m1, _m2;
+    let _m1, _m2
     //
     const title = _title,
       _now = () => window.performance.now(),
       start = () => void (_m1 = _now()),
       stop = () => void (_m2 = _now()),
-      diff = () => Math.floor((_m2 - _m1) * 1000) / 1000;
+      diff = () => Math.floor((_m2 - _m1) * 1000) / 1000
     //
     /*** Component Interface ***/
     return {
@@ -36,6 +36,6 @@
       // setters
       start,
       stop: () => (stop(), diff())
-    };
-  };
+    }
+  }
 </script>

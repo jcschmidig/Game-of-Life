@@ -50,24 +50,24 @@
 </style>
 
 <script>
-  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte";
-  import Field from "./Field.html";
+  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
+  import Field from "./Field.html"
 
   /*** Default Component Interface ***/
-  export let rows;
+  export let rows
 
   /*** events ***/
-  const dispatch = createEventDispatcher();
-  beforeUpdate(() => dispatch("measure"));
-  afterUpdate(() => dispatch("unmeasure"));
+  const dispatch = createEventDispatcher()
+  beforeUpdate(() => dispatch("measure"))
+  afterUpdate(() => dispatch("unmeasure"))
 </script>
 
 <script context="module">
-  import { counter, call } from "./common/Util.html";
-  import { createField } from "./Field.html";
+  import { counter, call } from "./common/Util.html"
+  import { createField } from "./Field.html"
 
   export const createBoard = (_dimension = 0, __measure = null) => {
-    let generation;
+    let generation
     //
     const dimension = _dimension,
       _measure = __measure,
@@ -130,7 +130,7 @@
           _getField(r * dimension + c).state()),
       //
       _count = (attr, state) =>
-        counter(_fields, (acc, field) => (acc += field[attr](state)));
+        counter(_fields, (acc, field) => (acc += field[attr](state)))
     //
     /*** Component Interface ***/
     return {
@@ -151,10 +151,10 @@
       create: () => _doMeasure(_fill, "setRandom", 0),
       next: () => _doMeasure(_next),
       flip: index => _doMeasure(_flip, index)
-    };
-  };
+    }
+  }
   //
   /*** Neighborhood ***/
   const _base = [-1, 0, 1],
-    matrix = Array.from(_base, x => Array.from(_base, y => [x, y])).flat();
+    matrix = Array.from(_base, x => Array.from(_base, y => [x, y])).flat()
 </script>

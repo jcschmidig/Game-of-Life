@@ -6,6 +6,7 @@
     <Measure style="{__death}" title="Death" diff="{blank(_death)}" />
   </article>
   <article id="generation">
+    <!-- prettier-ignore -->
     <Button
       id="next"
       name="{_showName}"
@@ -56,20 +57,20 @@
 </style>
 
 <script>
-  import { blank } from "./common/Util.html";
-  import { fState } from "./Field.html";
-  import Button from "./common/Button.html";
-  import Measure from "./common/Measure.html";
+  import { blank } from "./common/Util.html"
+  import { fState } from "./Field.html"
+  import Button from "./common/Button.html"
+  import Measure from "./common/Measure.html"
 
   /*** Default Component Interface ***/
-  export let status, calc, showTitle, showDiff;
+  export let status, calc, showTitle, showDiff
 
   /*** measure styles ***/
   const __total = "font-weight: 900;",
     __birth = "color: blue;",
     __death = "color: black;",
     __alive = "background-color: aqua;",
-    __dead = "background-color: lightgrey;";
+    __dead = "background-color: lightgrey;"
 
   /*** Observables ***/
   let _alive,
@@ -78,16 +79,16 @@
     _death,
     _timeCalc,
     _showgen = "-",
-    _nextEnabled;
+    _nextEnabled
   $: if (status) {
-    _alive = status.countState(fState.alive);
-    _dead = status.size - _alive;
-    _birth = status.countChangedState(fState.alive);
-    _death = status.countChangedState(fState.dead);
-    _timeCalc = calc.diff();
-    _showgen = status.generation === "" ? "-" : status.generation;
-    _showName = "+ Generation (" + _showgen + ")";
-    _nextEnabled = status.isReady || _birth || _death;
+    _alive = status.countState(fState.alive)
+    _dead = status.size - _alive
+    _birth = status.countChangedState(fState.alive)
+    _death = status.countChangedState(fState.dead)
+    _timeCalc = calc.diff()
+    _showgen = status.generation === "" ? "-" : status.generation
+    _showName = "+ Generation (" + _showgen + ")"
+    _nextEnabled = status.isReady || _birth || _death
   }
-  $: _showName = "+ Generation (" + _showgen + ")";
+  $: _showName = "+ Generation (" + _showgen + ")"
 </script>

@@ -10,12 +10,14 @@
     on:keyup="{keyEnter}"
     on:change="{checkDimension}"
   />
+  <!-- prettier-ignore -->
   <Button
     name="Create Board"
     width="{buttonWidth}"
     style="margin-right: .7em;"
     on:click="{createBoard}"
   />
+  <!-- prettier-ignore -->
   <Button name="Clear Board" width="{buttonWidth}" on:click="{clearBoard}" />
 </section>
 
@@ -31,16 +33,16 @@
 </style>
 
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
-  import { setFocus, checkMinMax } from "./common/Util.html";
-  import Button from "./common/Button.html";
+  import { createEventDispatcher, onMount } from "svelte"
+  import { setFocus, checkMinMax } from "./common/Util.html"
+  import Button from "./common/Button.html"
 
   /*** Default Component Interface ***/
   export let defDimension = 12,
     dimMin = 1,
-    dimMax = 1000;
-  let dimension = defDimension;
-  const buttonWidth = "13.8em";
+    dimMax = 1000
+  let dimension = defDimension
+  const buttonWidth = "13.8em"
 
   /*** Events ***/
   const keyEnter = (ev, key = ev.which) => key === 13 && createBoard(),
@@ -50,10 +52,10 @@
     dispatch = createEventDispatcher(),
     evt = (action, focus) => (setFocus(focus), dispatch(action, dimension)),
     createBoard = () => evt("create", "next"),
-    clearBoard = () => evt("clear", "dim");
+    clearBoard = () => evt("clear", "dim")
   //
   // set the focus to the input element within the start of the page
   onMount(() => {
-    setFocus("dim");
-  });
+    setFocus("dim")
+  })
 </script>

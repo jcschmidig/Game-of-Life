@@ -1,5 +1,5 @@
 <script context="module">
-  import { tick } from "svelte";
+  import { tick } from "svelte"
   //
   /***  Component Interface ***/
   export const counter = (obj, reducer) => obj.reduce(reducer, 0),
@@ -12,6 +12,6 @@
     blank = value => value || "",
     //
     checkMinMax = (value, min, max, valueMin = min, valueMax = max) =>
-      value < min ? valueMin : value > max ? valueMax : value;
+      value < min ? valueMin : value > max ? valueMax : value
   //
 </script>

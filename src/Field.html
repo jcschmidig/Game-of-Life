@@ -27,37 +27,37 @@
 </style>
 
 <script>
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte"
 
   /***  Default Component Interface ***/
-  export let index, state, changed;
+  export let index, state, changed
 
   /*** Observables ***/
   // background color based on state
-  $: _colorState = state ? "alive" : "dead";
+  $: _colorState = state ? "alive" : "dead"
   // border color based on change
-  $: _colorCycle = changed ? "changed-" + _colorState : "unchanged";
+  $: _colorCycle = changed ? "changed-" + _colorState : "unchanged"
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),
-    flip = () => dispatch("flip", index);
+    flip = () => dispatch("flip", index)
 </script>
 
 <script context="module">
   /*** field states ***/
-  export const fState = { alive: 1, dead: 0 };
+  export const fState = { alive: 1, dead: 0 }
   //
   export const createField = (_pos = 0) => {
-    const index = _pos;
+    const index = _pos
     let _state = fState.dead,
-      _prevState = _state;
+      _prevState = _state
     //
     const hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
       //
       _set = (state = fState.dead, prevState = state) =>
         void ((_state = state), (_prevState = prevState)),
-      _changeTo = state => _set(state, _state);
+      _changeTo = state => _set(state, _state)
     //
     // Component Interface
     return {
@@ -76,6 +76,6 @@
       setEmpty: () => _set(),
       setRandom: () => _set(Math.round(Math.random())),
       flip: () => _changeTo(+!_state)
-    };
-  };
+    }
+  }
 </script>
