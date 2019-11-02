@@ -1,19 +1,12 @@
-<div {style}>
-  <span>{title}:</span> <span class="right">{blank(diff)}</span>
-</div>
-
-<style>
-  .right {
-    float: right;
-  }
-</style>
+<tr>
+  <td>{title}:</td>
+  <td style="min-width: 4em; text-align: right;">{blank(diff)}</td>
+</tr>
 
 <script>
   import { blank } from "./Util.html"
   /*** Default Component Interface ***/
-  export let title,
-    diff,
-    style = ""
+  export let title, diff
 </script>
 
 <script context="module">

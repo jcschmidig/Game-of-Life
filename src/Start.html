@@ -1,36 +1,39 @@
-<section>
-  <label for="dim">Board length</label>
-  <input
-    id="dim"
-    title="between {dimMin} and {dimMax}!"
-    type="number"
-    min="{dimMin}"
-    max="{dimMax}"
-    bind:value="{dimension}"
-    on:keyup="{keyEnter}"
-    on:change="{checkDimension}"
-  />
-  <!-- prettier-ignore -->
-  <Button
-    name="Create Board"
-    width="{buttonWidth}"
-    style="margin-right: .7em;"
-    on:click="{createBoard}"
-  />
-  <!-- prettier-ignore -->
-  <Button name="Clear Board" width="{buttonWidth}" on:click="{clearBoard}" />
+<section class="section box">
+  <div class="container is-fluid">
+    <nav class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <label for="dim" class="label">Board length</label>
+        </div>
+        <div class="level-item">
+          <p class="control">
+            <input
+              class="input control"
+              id="dim"
+              title="between {dimMin} and {dimMax}!"
+              type="number"
+              min="{dimMin}"
+              max="{dimMax}"
+              bind:value="{dimension}"
+              on:keyup="{keyEnter}"
+              on:change="{checkDimension}"
+            />
+          </p>
+        </div>
+        <div class="level-item">
+          <!-- prettier-ignore -->
+          <Button name="Create Board" on:click="{createBoard}"
+		  />
+        </div>
+        <div class="level-item">
+          <!-- prettier-ignore -->
+          <Button name="Clear Board" on:click="{clearBoard}"
+		  />
+        </div>
+      </div>
+    </nav>
+  </div>
 </section>
-
-<style>
-  section {
-    height: 4em;
-  }
-  input {
-    width: 6em;
-    margin-right: 3.1em;
-    text-align: right;
-  }
-</style>
 
 <script>
   import { createEventDispatcher, onMount } from "svelte"
@@ -42,7 +45,6 @@
     dimMin = 1,
     dimMax = 1000
   let dimension = defDimension
-  const buttonWidth = "13.8em"
 
   /*** Events ***/
   const keyEnter = (ev, key = ev.which) => key === 13 && createBoard(),

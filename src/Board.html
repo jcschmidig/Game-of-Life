@@ -1,60 +1,46 @@
-<section>
-  <table>
-    {#each rows as row}
-    <tr>
-      {#each row as field}
-      <td>
+<section class="section">
+  <div class="table-container">
+    <table class="table is-bordered is-narrow">
+      {#each rows as row}
+      <tr>
+        {#each row as field}
         <Field
           index="{field.index}"
           state="{field.state()}"
           changed="{field.hasChanged()}"
+          {cellWidth}
           on:flip
         />
-      </td>
+        {/each}
+      </tr>
+      {:else}
+      <article>
+        <h4 class="title is-4">Use</h4>
+        <table class=table>
+          <tr>
+            <td>
+              <span class="tag is-light is-medium"><strong>Board length</strong></span></td><td>to define the size of the board (length x
+              length).
+            </td></tr>
+            <tr><td><span class="button is-primary is-active">Create Board</span></td><td>to display a randomly setup board.</td></tr>
+            <tr><td>
+              <span class="button is-primary is-active">Clear Board</span></td><td>to setup an empty board. You may create your own
+              game by clicking on any cell to flip its state.
+            </td></tr>
+            <tr><td><span class="button is-info is-active">+ Generation</span></td><td>to trigger the next generation.</td></tr>
+          </table>
+      </article>
       {/each}
-    </tr>
-    {:else}
-    <article>
-      <h3>
-        Use
-        <ul>
-          <li>
-            [ Board length ] to define the size of the board (length x length).
-          </li>
-          <li>[ Create Board ] to display a randomly setup board.</li>
-          <li>
-            [ Clear Board ] to setup an empty board. You may create your own
-            game by clicking on any cell to flip its state.
-          </li>
-          <li>[ + Generation ] to trigger the next generation.</li>
-        </ul>
-      </h3>
-    </article>
-    {/each}
-  </table>
+    </table>
+  </div>
 </section>
-
-<style>
-  table {
-    margin: 1em 0;
-    border: 1px solid grey;
-    border-collapse: collapse;
-    border-spacing: 0;
-  }
-  article {
-    margin: 1em;
-  }
-  li {
-    margin-bottom: 1em;
-  }
-</style>
 
 <script>
   import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
   import Field from "./Field.html"
 
   /*** Default Component Interface ***/
-  export let rows
+  export let rows, cellWidth
 
   /*** events ***/
   const dispatch = createEventDispatcher()

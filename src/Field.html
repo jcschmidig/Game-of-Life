@@ -1,42 +1,18 @@
-<button class="{_colorState} {_colorCycle}" on:click="{flip}" />
-
-<style>
-  button {
-    width: 30px;
-    height: 30px;
-    border-width: 2px;
-    cursor: crosshair;
-    margin: 2px;
-    padding: 1px;
-  }
-  .dead {
-    background-color: lightgrey;
-  }
-  .alive {
-    background-color: aqua;
-  }
-  .unchanged {
-    border-color: white;
-  }
-  .changed-dead {
-    border-color: black;
-  }
-  .changed-alive {
-    border-color: blue;
-  }
-</style>
+<td
+  class="{_colorState}"
+  style="padding: {cellWidth}px; "
+  on:click="{flip}"
+></td>
 
 <script>
   import { createEventDispatcher } from "svelte"
 
   /***  Default Component Interface ***/
-  export let index, state, changed
+  export let index, state, changed, cellWidth
 
   /*** Observables ***/
   // background color based on state
-  $: _colorState = state ? "alive" : "dead"
-  // border color based on change
-  $: _colorCycle = changed ? "changed-" + _colorState : "unchanged"
+  $: _colorState = state ? "is-success" : ""
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),

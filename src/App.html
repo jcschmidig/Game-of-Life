@@ -6,15 +6,17 @@
 	---------------------
 	by jean-claude@schmidig.email
 -->
-<header>
-  <h1>
-    <a
-      href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
-      target="_blank"
-      >Conways's Game of Life</a
-    >
-  </h1>
-</header>
+<section class="section">
+  <div class="container">
+    <h1 class="title">
+      <a
+        href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
+        target="_blank"
+        >Conways's Game of Life</a
+      >
+    </h1>
+  </div>
+</section>
 <Start
   {defDimension}
   {dimMin}
@@ -22,11 +24,9 @@
   on:clear="{clear}"
   on:create="{create}"
 />
-<hr />
 <Game {status} {calc} showTitle="{show.title}" {showDiff} on:click="{next}" />
-<hr />
 <Board
-  {rows}
+  {rows} {cellWidth}
   on:flip="{flip}"
   on:measure="{measureRun}"
   on:unmeasure="{measureStop}"
@@ -37,16 +37,18 @@
   import Game from "./Game.html"
   import Board, { createBoard } from "./Board.html"
   import { createMeasure } from "./common/Measure.html"
+  import { checkMinMax } from "./common/Util.html"
   //
-  let board,
-    rows = [],
-    status,
-    showDiff
   const [defDimension, dimMin, dimMax] = [15, 3, Math.floor(Math.sqrt(1e5))],
     calc = createMeasure("Calc"),
     show = createMeasure("Display")
 
   /*** Observables ***/
+  let board,
+    rows = [],
+    status,
+    showDiff,
+	cellWidth
   $: if (board) {
     rows = board.rows
     status = {
@@ -56,6 +58,12 @@
       countState: board.countState,
       countChangedState: board.countChangedState
     }
+  }
+  $: if (rows.length) {
+  	cellWidth = Math.max(document.documentElement.clientWidth,
+  					  window.innerWidth || 0)
+  	cellWidth = Math.floor(checkMinMax((cellWidth-64)/rows.length/2,
+		1, cellWidth/24))
   }
 
   /*** events ***/
