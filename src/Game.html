@@ -1,41 +1,72 @@
-<section>
-  <div class="container is-fluid">
-    <nav class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <table class="table">
-            <Measure title="Total" diff="{blank(_birth + _death)}" />
-            <Measure title="Birth" diff="{blank(_birth)}" />
-            <Measure title="Death" diff="{blank(_death)}" />
-          </table>
-        </div>
-        <div class="level-item">
-          <!-- prettier-ignore -->
-          <Button
-			  style=is-info
-		      id="next"
-			  width="12em"
-		      name="{_showName}"
-		      disabled="{!_nextEnabled}"
-		      on:click
-		    />
-        </div>
-        <div class="level-item">
-          <table class="table">
-            <Measure title="Total" diff="{blank(_alive + _dead)}" />
-            <Measure title="Alive" diff="{blank(_alive)}" />
-            <Measure title="Dead" diff="{blank(_dead)}" />
-          </table>
-        </div>
-        <div class="level-item">
-          <table class="table">
-            <Measure title="Time" diff="{calc.unit}" />
-            <Measure title="{calc.title}" diff="{_timeCalc}" />
-            <Measure title="{showTitle}" diff="{showDiff}" />
-          </table>
+<section class="container">
+  <div class="tile is-ancestor">
+    <div class="tile is-parent">
+      <div class="tile is-child is-2 box">
+        <div class="tags">
+          <Measure
+            title="Alive"
+            diff="{blank(_alive)}"
+            style="is-success is-light"
+          />
+          <Measure
+            title="Dead"
+            diff="{blank(_dead)}"
+            style="is-danger is-light"
+          />
+          <Measure
+            title="Total"
+            diff="{blank(_alive + _dead)}"
+            style="is-info is-light"
+          />
         </div>
       </div>
-    </nav>
+      <div class="tile is-3 is-child is-vertical box">
+        <div class="tile is-child">
+          <!-- prettier-ignore -->
+          <Button
+		style=is-primary
+		id="next"
+		width="auto"
+		name="{_showName}"
+		disabled="{!_nextEnabled}"
+		on:click
+	    />
+        </div>
+        <div class="tile is-child">
+          <div class="tags">
+            <Measure
+              title="{calc.title}"
+              diff="{blank(_timeCalc)+calc.unit}"
+              style="is-light is-info"
+            />
+            <Measure
+              title="{showTitle}"
+              diff="{blank(showDiff)+calc.unit}"
+              style="is-light is-info"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="tile is-child is-2 box is-hidden-mobile">
+        <div class="tags">
+          <Measure
+            title="Birth"
+            diff="{blank(_birth)}"
+            style="is-light is-success"
+          />
+          <Measure
+            title="Death"
+            diff="{blank(_death)}"
+            style="is-light is-danger"
+          />
+          <Measure
+            title="Total"
+            diff="{blank(_birth + _death)}"
+            style="is-light is-info"
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 

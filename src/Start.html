@@ -1,38 +1,36 @@
-<section class="section box">
-  <div class="container is-fluid">
-    <nav class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <label for="dim" class="label">Board length</label>
-        </div>
-        <div class="level-item">
-          <p class="control">
-            <input
-              class="input control"
-              id="dim"
-              title="between {dimMin} and {dimMax}!"
-              type="number"
-              min="{dimMin}"
-              max="{dimMax}"
-              bind:value="{dimension}"
-              on:keyup="{keyEnter}"
-              on:change="{checkDimension}"
-            />
-          </p>
-        </div>
-        <div class="level-item">
-          <!-- prettier-ignore -->
-          <Button name="Create Board" on:click="{createBoard}"
-		  />
-        </div>
-        <div class="level-item">
-          <!-- prettier-ignore -->
-          <Button name="Clear Board" on:click="{clearBoard}"
-		  />
-        </div>
+<section class="container box">
+  <nav class="level">
+    <div class="level-left">
+      <div class="level-item">
+        <label for="dim" class="label">Board length</label>
       </div>
-    </nav>
-  </div>
+      <div class="level-item">
+        <p class="control">
+          <input
+            class="input control"
+            id="dim"
+            title="between {dimMin} and {dimMax}!"
+            type="number"
+            min="{dimMin}"
+            max="{dimMax}"
+            bind:value="{dimension}"
+            on:keyup="{keyEnter}"
+            on:change="{checkDimension}"
+          />
+        </p>
+      </div>
+      <div class="level-item">
+        <!-- prettier-ignore -->
+        <Button name="Create Board" on:click="{createBoard}"
+		  />
+      </div>
+      <div class="level-item">
+        <!-- prettier-ignore -->
+        <Button name="Clear Board" on:click="{clearBoard}"
+		  />
+      </div>
+    </div>
+  </nav>
 </section>
 
 <script>

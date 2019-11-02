@@ -1,12 +1,17 @@
-<tr>
+<!-- tr>
   <td>{title}:</td>
   <td style="min-width: 4em; text-align: right;">{blank(diff)}</td>
-</tr>
+</tr -->
+<span class="tag is-medium {style}">{title}: {blank(diff)}</span>
+<!-- div class="level">
+    <div class=level-left><div class=level-item>{title}:</div></div>
+    <div class=level-right><div class=level-item>{blank(diff)}</div></div>
+</div -->
 
 <script>
   import { blank } from "./Util.html"
   /*** Default Component Interface ***/
-  export let title, diff
+  export let title, diff, style
 </script>
 
 <script context="module">
