@@ -26,7 +26,8 @@
 />
 <Game {status} {calc} showTitle="{show.title}" {showDiff} on:click="{next}" />
 <Board
-  {rows} {cellWidth}
+  {rows}
+  {cellWidth}
   on:flip="{flip}"
   on:measure="{measureRun}"
   on:unmeasure="{measureStop}"
@@ -48,7 +49,7 @@
     rows = [],
     status,
     showDiff,
-	cellWidth
+    cellWidth
   $: if (board) {
     rows = board.rows
     status = {
@@ -60,10 +61,13 @@
     }
   }
   $: if (rows.length) {
-  	cellWidth = Math.max(document.documentElement.clientWidth,
-  					  window.innerWidth || 0)
-  	cellWidth = Math.floor(checkMinMax((cellWidth-64)/rows.length/2,
-		1, cellWidth/24))
+    cellWidth = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    )
+    cellWidth = Math.floor(
+      checkMinMax((cellWidth - 64) / rows.length / 2, 1, cellWidth / 24)
+    )
   }
 
   /*** events ***/
