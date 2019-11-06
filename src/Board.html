@@ -1,56 +1,54 @@
-<section class="section">
-  <div class="table-container">
-    <table class="table is-bordered is-narrow">
-      {#each rows as row}
-      <tr>
-        {#each row as field}
-        <Field
-          index="{field.index}"
-          state="{field.state()}"
-          changed="{field.hasChanged()}"
-          {cellWidth}
-          on:flip
-        />
-        {/each}
-      </tr>
-      {:else}
-      <article>
-        <h4 class="title is-4">Use</h4>
-        <table class="table">
-          <tr>
-            <td>
-              <span class="tag is-light is-medium"
-                ><strong>Board length</strong></span
-              >
-            </td>
-            <td>to define the size of the board (length x length).</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="button is-primary is-active">Create Board</span>
-            </td>
-            <td>to display a randomly setup board.</td>
-          </tr>
-          <tr>
-            <td>
-              <span class="button is-primary is-active">Clear Board</span>
-            </td>
-            <td>
-              to setup an empty board. You may create your own game by clicking
-              on any cell to flip its state.
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <span class="button is-primary is-active">+ Generation</span>
-            </td>
-            <td>to trigger the next generation.</td>
-          </tr>
-        </table>
-      </article>
+<section class="container box">
+  <table class="table is-bordered is-narrow is-fullwidth">
+    {#each rows as row}
+    <tr>
+      {#each row as field}
+      <Field
+        index="{field.index}"
+        state="{field.state()}"
+        changed="{field.hasChanged()}"
+        {cellWidth}
+        on:flip
+      />
       {/each}
-    </table>
-  </div>
+    </tr>
+    {:else}
+    <article>
+      <h4 class="title is-4">Use</h4>
+      <table class="table">
+        <tr>
+          <td>
+            <span class="tag is-light is-medium"
+              ><strong>Board length</strong></span
+            >
+          </td>
+          <td>to define the size of the board (length x length).</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="button is-primary is-active">Create Board</span>
+          </td>
+          <td>to display a randomly setup board.</td>
+        </tr>
+        <tr>
+          <td>
+            <span class="button is-primary is-active">Clear Board</span>
+          </td>
+          <td>
+            to setup an empty board. You may create your own game by clicking on
+            any cell to flip its state.
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="button is-primary is-active">+ Generation</span>
+          </td>
+          <td>to trigger the next generation.</td>
+        </tr>
+      </table>
+    </article>
+    {/each}
+  </table>
 </section>
 
 <script>

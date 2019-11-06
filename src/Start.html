@@ -1,42 +1,40 @@
-<section class="container box">
-  <nav class="level">
-    <div class="level-left">
-      <div class="level-item">
-        <label for="dim" class="label">Board length</label>
-      </div>
-      <div class="level-item">
-        <p class="control">
-          <input
-            class="input control"
-            id="dim"
-            title="between {dimMin} and {dimMax}!"
-            type="number"
-            min="{dimMin}"
-            max="{dimMax}"
-            bind:value="{dimension}"
-            on:keyup="{keyEnter}"
-            on:change="{checkDimension}"
-          />
-        </p>
-      </div>
-      <div class="level-item">
-        <!-- prettier-ignore -->
-        <Button name="Create Board" on:click="{createBoard}"
-		  />
-      </div>
-      <div class="level-item">
-        <!-- prettier-ignore -->
-        <Button name="Clear Board" on:click="{clearBoard}"
-		  />
-      </div>
-    </div>
-  </nav>
+<section id="breite" class="container box">
+  <div>
+    <label for="dim" class="label">Board length</label>
+    <input
+      class="input"
+      id="dim"
+      title="between {dimMin} and {dimMax}!"
+      type="number"
+      min="{dimMin}"
+      max="{dimMax}"
+      bind:value="{dimension}"
+      on:keyup="{keyEnter}"
+      on:change="{checkDimension}"
+    />
+  </div>
+  <button class="button is-primary" on:click="{createBoard}">
+    Create Board
+  </button>
+  <button class="button is-primary" on:click="{clearBoard}">Clear Board</button>
 </section>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: minmax(150px, 2fr) 2fr 2fr;
+    align-items: center;
+    justify-item: center;
+    grid-gap: 0 10px;
+  }
+  input {
+    width: 4em;
+  }
+</style>
 
 <script>
   import { createEventDispatcher, onMount } from "svelte"
   import { setFocus, checkMinMax } from "./common/Util.html"
-  import Button from "./common/Button.html"
 
   /*** Default Component Interface ***/
   export let defDimension = 12,

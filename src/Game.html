@@ -1,80 +1,83 @@
-<section class="container">
-  <div class="tile is-ancestor">
-    <div class="tile is-parent">
-      <div class="tile is-child is-2 box">
-        <div class="tags">
-          <Measure
-            title="Alive"
-            diff="{blank(_alive)}"
-            style="is-success is-light"
-          />
-          <Measure
-            title="Dead"
-            diff="{blank(_dead)}"
-            style="is-danger is-light"
-          />
-          <Measure
-            title="Total"
-            diff="{blank(_alive + _dead)}"
-            style="is-info is-light"
-          />
-        </div>
-      </div>
-      <div class="tile is-3 is-child is-vertical box">
-        <div class="tile is-child">
-          <!-- prettier-ignore -->
-          <Button
-		style=is-primary
-		id="next"
-		width="auto"
-		name="{_showName}"
-		disabled="{!_nextEnabled}"
-		on:click
-	    />
-        </div>
-        <div class="tile is-child">
-          <div class="tags">
-            <Measure
-              title="{calc.title}"
-              diff="{blank(_timeCalc)+calc.unit}"
-              style="is-light is-info"
-            />
-            <Measure
-              title="{showTitle}"
-              diff="{blank(showDiff)+calc.unit}"
-              style="is-light is-info"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="tile is-child is-2 box is-hidden-mobile">
-        <div class="tags">
-          <Measure
-            title="Birth"
-            diff="{blank(_birth)}"
-            style="is-light is-success"
-          />
-          <Measure
-            title="Death"
-            diff="{blank(_death)}"
-            style="is-light is-danger"
-          />
-          <Measure
-            title="Total"
-            diff="{blank(_birth + _death)}"
-            style="is-light is-info"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
+<section class="container box">
+  <span class="alive tag is-medium is-success is-light"
+    >Alive: {blank(_alive)}</span
+  >
+  <span class="dead tag is-medium is-danger is-light"
+    >Dead: {blank(_dead)}</span
+  >
+  <span class="total1 tag is-medium is-info is-light"
+    >Total: {blank(_alive + _dead)}</span
+  >
+  <span class="birth tag is-medium is-success is-light"
+    >Birth: {blank(_birth)}</span
+  >
+  <span class="death tag is-medium is-danger is-light"
+    >Death: {blank(_death)}</span
+  >
+  <span class="total2 tag is-medium is-info is-light"
+    >Total: {blank(_birth + _death)}</span
+  >
+  <span class="calc tag is-medium is-info is-light"
+    >{calc.title}: {blank(_timeCalc)+calc.unit}</span
+  >
+  <span class="show tag is-medium is-info is-light"
+    >{showTitle}: {blank(showDiff)+calc.unit}</span
+  >
+  <button
+    class="next button is-primary"
+    id="next"
+    disabled="{!_nextEnabled}"
+    on:click
+  >
+    {_showName}
+  </button>
 </section>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr minmax(1.5fr, 3fr) 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      "alive next birth"
+      "dead calc death"
+      "total1 show total2";
+    align-items: center;
+    justify-item: center;
+    grid-gap: 0 10px;
+  }
+  .alive {
+    grid-area: alive;
+  }
+  .dead {
+    grid-area: dead;
+  }
+  .birth {
+    grid-area: birth;
+  }
+  .death {
+    grid-area: death;
+  }
+  .total1 {
+    grid-area: total1;
+  }
+  .total2 {
+    grid-area: total2;
+  }
+  .next {
+    grid-area: next;
+  }
+  .show {
+    grid-area: show;
+  }
+  .calc {
+    grid-area: calc;
+  }
+</style>
 
 <script>
   import { blank } from "./common/Util.html"
   import { fState } from "./Field.html"
-  import Button from "./common/Button.html"
-  import Measure from "./common/Measure.html"
 
   /*** Default Component Interface ***/
   export let status, calc, showTitle, showDiff
