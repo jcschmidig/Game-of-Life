@@ -12,7 +12,7 @@
   import { createEventDispatcher } from "svelte"
 
   /***  Default Component Interface ***/
-  export let index, state, cellWidth
+  export let row, col, state, cellWidth
 
   /*** Observables ***/
   // background color based on state
@@ -20,15 +20,16 @@
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),
-    flip = () => dispatch("flip", index)
+    flip = () => dispatch("flip", {row, col})
 </script>
 
 <script context="module">
   /*** field states ***/
   export const fState = { alive: 1, dead: 0 }
   //
-  export const createField = (_pos = 0) => {
-    const index = _pos
+  export const createField = (_pos = 0, _dimension = 1) => {
+    const row = Math.floor(_pos / _dimension),
+      col = _pos % _dimension
     let _state = fState.dead,
       _prevState = _state
     //
@@ -43,7 +44,8 @@
     return {
       //
       // static getters
-      index,
+      row,
+      col,
       //
       // dynamic getters
       state: () => _state,
