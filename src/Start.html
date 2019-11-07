@@ -1,4 +1,4 @@
-<section id="breite" class="container box">
+<section id="{markOffset}" class="container box">
   <div>
     <label for="dim" class="label">Board length</label>
     <input
@@ -37,7 +37,8 @@
   import { setFocus, checkMinMax } from "./common/Util.html"
 
   /*** Default Component Interface ***/
-  export let defDimension = 12,
+  export let markOffset,
+    defDimension = 12,
     dimMin = 1,
     dimMax = 1000
   let dimension = defDimension

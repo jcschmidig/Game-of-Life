@@ -1,14 +1,18 @@
 <td
   class="{_colorState}"
-  style="padding: {cellWidth}px 0;"
+  style="height: {cellWidth}px;"
   on:click="{flip}"
 ></td>
+
+<style>
+    td { padding: 0; }
+</style>
 
 <script>
   import { createEventDispatcher } from "svelte"
 
   /***  Default Component Interface ***/
-  export let index, state, changed, cellWidth
+  export let index, state, cellWidth
 
   /*** Observables ***/
   // background color based on state
@@ -50,7 +54,7 @@
       // setters
       setState: state => _changeTo(state),
       setEmpty: () => _set(),
-      setRandom: () => _set(Math.round(Math.random())),
+      setRandom: () => _set(+(Math.round(Math.random()*6)>3)),
       flip: () => _changeTo(+!_state)
     }
   }
