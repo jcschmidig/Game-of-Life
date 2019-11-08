@@ -1,11 +1,9 @@
-<td
-  class="{_colorState}"
-  style="height: {cellWidth}px;"
-  on:click="{flip}"
-></td>
+<td class="{_colorState}" style="height: {cellWidth}px;" on:click="{flip}"></td>
 
 <style>
-    td { padding: 0; }
+  td {
+    padding: 0;
+  }
 </style>
 
 <script>
@@ -20,7 +18,7 @@
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),
-    flip = () => dispatch("flip", {row, col})
+    flip = () => dispatch("flip", { row, col })
 </script>
 
 <script context="module">
@@ -56,7 +54,7 @@
       // setters
       setState: state => _changeTo(state),
       setEmpty: () => _set(),
-      setRandom: () => _set(+(Math.round(Math.random()*6)>3)),
+      setRandom: () => _set(+(Math.round(Math.random() * 6) > 3)),
       flip: () => _changeTo(+!_state)
     }
   }

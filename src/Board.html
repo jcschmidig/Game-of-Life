@@ -13,7 +13,7 @@
       {/each}
     </tr>
     {:else}
-    <Explanation/>
+    <Explanation />
     {/each}
   </table>
 </section>
@@ -21,7 +21,7 @@
 <script>
   import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
   import Field from "./Field.html"
-  import Explanation from './Explanation.html'
+  import Explanation from "./Explanation.html"
 
   /*** Default Component Interface ***/
   export let rows, cellWidth
@@ -45,7 +45,7 @@
         createField(idx, _dimension)
       ),
       rows = _fields.reduce(
-        (acc, field, idx) => (
+        (acc, field) => (
           // works because col always starts at zero!
           field.col ? acc[acc.length - 1].push(field) : acc.push([field]), acc
         ),
@@ -58,8 +58,9 @@
         action(...arg),
         _measure && _measure.stop()),
       //
-      _flip = (index) =>
-        void (_getField(index.row, index.col).flip(), (generation = +generation)),
+      _flip = index =>
+        void (_getField(index.row, index.col).flip(),
+        (generation = +generation)),
       //
       _fill = (action, _generation = "") =>
         void (action && _fields.map(call(action)), (generation = _generation)),

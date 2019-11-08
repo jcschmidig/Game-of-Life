@@ -1,77 +1,36 @@
 <section class="container box">
-  <span class="alive tag is-medium is-success is-light"
-    >Alive: {blank(_alive)}</span
-  >
-  <span class="dead tag is-medium is-danger is-light"
-    >Dead: {blank(_dead)}</span
-  >
-  <span class="total1 tag is-medium is-info is-light"
-    >Total: {blank(_alive + _dead)}</span
-  >
-  <span class="birth tag is-medium is-success is-light"
-    >Birth: {blank(_birth)}</span
-  >
-  <span class="death tag is-medium is-danger is-light"
-    >Death: {blank(_death)}</span
-  >
-  <span class="total2 tag is-medium is-info is-light"
-    >Total: {blank(_birth + _death)}</span
-  >
-  <span class="calc tag is-medium is-info is-light"
-    >{calc.title}: {blank(_timeCalc)+calc.unit}</span
-  >
-  <span class="show tag is-medium is-info is-light"
-    >{showTitle}: {blank(showDiff)+calc.unit}</span
-  >
+  <span class="tag is-medium is-success is-light">Alive: {blank(_alive)}</span>
   <button
-    class="next button is-primary"
+    class="button is-primary"
     id="next"
     disabled="{!_nextEnabled}"
     on:click
   >
     {_showName}
   </button>
+  <span class="tag is-medium is-success is-light">Birth: {blank(_birth)}</span>
+  <span class="tag is-medium is-danger is-light">Dead: {blank(_dead)}</span>
+  <span class="tag is-medium is-info is-light"
+    >{calc.title}: {blank(_timeCalc)+calc.unit}</span
+  >
+  <span class="tag is-medium is-danger is-light">Death: {blank(_death)}</span>
+  <span class="tag is-medium is-info is-light"
+    >Total: {blank(_alive + _dead)}</span
+  >
+  <span class="tag is-medium is-info is-light"
+    >{showTitle}: {blank(showDiff)+calc.unit}</span
+  >
+  <span class="tag is-medium is-info is-light"
+    >Total: {blank(_birth + _death)}</span
+  >
 </section>
 
 <style>
   .container {
     display: grid;
-    grid-template-columns: 1fr minmax(1.5fr, 3fr) 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    grid-template-areas:
-      "alive next birth"
-      "dead calc death"
-      "total1 show total2";
+    grid: repeat(3, 1fr) / 1fr minmax(180px, 1fr) 1fr;
     align-items: center;
-    justify-item: center;
     grid-gap: 0 10px;
-  }
-  .alive {
-    grid-area: alive;
-  }
-  .dead {
-    grid-area: dead;
-  }
-  .birth {
-    grid-area: birth;
-  }
-  .death {
-    grid-area: death;
-  }
-  .total1 {
-    grid-area: total1;
-  }
-  .total2 {
-    grid-area: total2;
-  }
-  .next {
-    grid-area: next;
-  }
-  .show {
-    grid-area: show;
-  }
-  .calc {
-    grid-area: calc;
   }
 </style>
 
