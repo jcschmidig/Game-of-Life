@@ -4,6 +4,12 @@
   /***  Component Interface ***/
   export const counter = (obj, reducer) => obj.reduce(reducer, 0),
     //
+    builder = (obj, reducer) => obj.reduce(reducer, []),
+    //
+    filler = (obj, action) => builder(obj, (acc, o) => (action(acc, o), acc)),
+    //
+    pusher = (obj, action) => filler(obj, (acc, o) => acc.push(action(o))),
+    //
     call = (verb, ...prop) => obj => obj[verb](...prop),
     //
     setFocus = async element =>
@@ -12,6 +18,8 @@
     blank = value => value || "",
     //
     checkMinMax = (value, min, max, valueMin = min, valueMax = max) =>
-      value < min ? valueMin : value > max ? valueMax : value
+      value < min ? valueMin : value > max ? valueMax : value,
+    //
+    checkBorder = (value, lower, upper) => value > lower && value < upper
   //
 </script>

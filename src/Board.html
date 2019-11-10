@@ -33,7 +33,13 @@
 </script>
 
 <script context="module">
-  import { counter, call } from "./common/Util.html"
+  import {
+    counter,
+    filler,
+    pusher,
+    call,
+    checkBorder
+  } from "./common/Util.html"
   import { createField } from "./Field.html"
 
   export const createBoard = (_dimension = 0, _measure = null) => {
@@ -43,61 +49,43 @@
       _fields = Array.from({ length: size }, (_, idx) =>
         createField(idx, _dimension)
       ),
-      rows = _fields.reduce(
-        (acc, field) => (
-          // works because col always starts at zero!
-          field.col ? acc[acc.length - 1].push(field) : acc.push([field]), acc
-        ),
-        []
+      rows = filler(_fields, (acc, field) =>
+        // works because col always starts at zero!
+        field.col ? acc[acc.length - 1].push(field) : acc.push([field])
       ),
       _getField = (row, col) => rows[row][col],
       //
       _doMeasure = (action, ...arg) =>
         void (_measure && _measure.start(),
-        action(...arg),
+        (generation = action(...arg)),
         _measure && _measure.stop()),
       //
-      _flip = index =>
-        void (_getField(index.row, index.col).flip(),
-        (generation = +generation)),
+      _flip = index => (_getField(index.row, index.col).flip(), +generation),
       //
-      _fill = (action, _generation = "") =>
-        void (action && _fields.map(call(action)), (generation = _generation)),
+      _fill = action => (action ? (_fields.map(call(action)), 0) : ""),
       //
-      _next = (newStates = null, state = null) =>
-        void ((newStates = _fields.reduce(
-          (acc, field) => (
-            (state = field.state()),
-            acc.push(
-              _nextState(state, _countAlive(state, field.row, field.col))
-            ),
-            acc
-          ),
-          []
-        )),
-        //
+      _next = (newStates = _getNextStates()) => (
         _fields.map((field, idx) => field.setState(newStates[idx])),
-        //
-        (generation += 1)),
+        generation + 1
+      ),
       //
-      _nextState = (state, count) => +(count === 3 || (count === 2 && state)),
+      _getNextStates = () =>
+        pusher(_fields, field =>
+          _nextState(field.state(), countAlive(field.row, field.col))
+        ),
       //
-      _countAlive = (state, row, col) =>
-        counter(matrix, _countLife(row, col)) - state,
+      _nextState = (state, count) => +(count === 3 || count - state === 3),
       //
-      _countLife = (row, col) => (count, mx) =>
-        (count += _validCount(mx, row, col)),
+      countAlive = (row, col) =>
+        counter(matrix, (count, mx) => count + _stateCount(mx, row, col)),
       //
-      _validCount = (mx, r /*ow*/, c /*ol*/) =>
-        +(([r, c] = [r + mx[0], c + mx[1]]),
-        r >= 0 &&
-          r < _dimension &&
-          c >= 0 &&
-          c < _dimension &&
-          _getField(r, c).state()),
+      _stateCount = (mx, row, col) =>
+        checkBorder((row += mx[0]), -1, _dimension) &&
+        checkBorder((col += mx[1]), -1, _dimension) &&
+        _getField(row, col).state(),
       //
       _count = (attr, state) =>
-        counter(_fields, (acc, field) => (acc += field[attr](state)))
+        counter(_fields, (acc, field) => acc + field[attr](state))
     //
     /*** Component Interface ***/
     return {
@@ -114,7 +102,7 @@
       //
       // setters
       clear: () => _doMeasure(_fill),
-      create: () => _doMeasure(_fill, "setRandom", 0),
+      create: () => _doMeasure(_fill, "setRandom"),
       next: () => _doMeasure(_next),
       flip: index => _doMeasure(_flip, index)
     }
