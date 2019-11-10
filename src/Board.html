@@ -36,12 +36,11 @@
   import { counter, call } from "./common/Util.html"
   import { createField } from "./Field.html"
 
-  export const createBoard = (_dimension = 0, __measure = null) => {
+  export const createBoard = (_dimension = 0, _measure = null) => {
     let generation
     //
-    const dimension = _dimension,
-      _measure = __measure,
-      _fields = Array.from({ length: dimension ** 2 }, (_, idx) =>
+    const size = _dimension ** 2,
+      _fields = Array.from({ length: size }, (_, idx) =>
         createField(idx, _dimension)
       ),
       rows = _fields.reduce(
@@ -92,9 +91,9 @@
       _validCount = (mx, r /*ow*/, c /*ol*/) =>
         +(([r, c] = [r + mx[0], c + mx[1]]),
         r >= 0 &&
-          r < dimension &&
+          r < _dimension &&
           c >= 0 &&
-          c < dimension &&
+          c < _dimension &&
           _getField(r, c).state()),
       //
       _count = (attr, state) =>
@@ -104,9 +103,8 @@
     return {
       //
       // static getters
-      dimension,
+      size,
       rows,
-      size: dimension ** 2,
       //
       // dynamic getters
       generation: () => generation,
