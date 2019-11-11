@@ -80,10 +80,10 @@
           (count, mx) => count + _stateCount(row + mx[0], col + mx[1])
         ),
       //
-      _stateCount = (row, col) =>
-        checkBorder(row, -1, _dimension) &&
-        checkBorder(col, -1, _dimension) &&
-        _getField(row, col).state(),
+      _stateCount = (r, c) =>
+        _checkBorder(r) && _checkBorder(c) && _getField(r, c).state(),
+      //
+      _checkBorder = value => checkBorder(value, _dimension),
       //
       _fieldCount = (attr, state) =>
         counter(_fields, (acc, field) => acc + field[attr](state))
