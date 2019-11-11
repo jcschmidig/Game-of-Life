@@ -4,6 +4,9 @@
   /***  Component Interface ***/
   export const counter = (obj, reducer) => obj.reduce(reducer, 0),
     //
+    objCounter = (obj, action, ...args) =>
+      counter(obj, (acc, o) => acc + o[action](...args)),
+    //
     builder = (obj, reducer) => obj.reduce(reducer, []),
     //
     filler = (obj, action) => builder(obj, (acc, o) => (action(acc, o), acc)),
@@ -13,6 +16,9 @@
     mapper = (obj, action, arr) => obj.map((o, idx) => o[action](arr[idx])),
     //
     call = (verb, ...prop) => obj => obj[verb](...prop),
+    //
+    fillArray = (size, action, ...args) =>
+      Array.from({ length: size }, (_, idx) => action(idx, ...args)),
     //
     setFocus = async element =>
       void (await tick(), document.getElementById(element).focus()),

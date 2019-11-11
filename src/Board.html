@@ -35,9 +35,11 @@
 <script context="module">
   import {
     counter,
+    objCounter,
     filler,
     pusher,
     mapper,
+    fillArray,
     call,
     checkBorder
   } from "./common/Util.html"
@@ -47,11 +49,9 @@
     let generation
     //
     const size = _dimension ** 2,
-      _fields = Array.from({ length: size }, (_, idx) =>
-        createField(idx, _dimension)
-      ),
+      _fields = fillArray(size, createField, _dimension),
+      //
       rows = filler(_fields, (acc, field) =>
-        // works because col always starts at zero!
         field.col ? acc[acc.length - 1].push(field) : acc.push([field])
       ),
       _getField = (row, col) => rows[row][col],
@@ -85,8 +85,7 @@
       //
       _checkBorder = value => checkBorder(value, _dimension),
       //
-      _fieldCount = (attr, state) =>
-        counter(_fields, (acc, field) => acc + field[attr](state))
+      _fieldCount = (attr, state) => objCounter(_fields, attr, state)
     //
     /*** Component Interface ***/
     return {
