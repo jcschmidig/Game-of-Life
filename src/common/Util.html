@@ -10,6 +10,8 @@
     //
     pusher = (obj, action) => filler(obj, (acc, o) => acc.push(action(o))),
     //
+    mapper = (obj, action, arr) => obj.map((o, idx) => o[action](arr[idx])),
+    //
     call = (verb, ...prop) => obj => obj[verb](...prop),
     //
     setFocus = async element =>

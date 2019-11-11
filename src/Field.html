@@ -33,6 +33,7 @@
     //
     const hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
+      nextState = count => +(count === 3 || count - _state === 3),
       //
       _set = (state = fState.dead, prevState = state) =>
         void ((_state = state), (_prevState = prevState)),
@@ -50,6 +51,7 @@
       hasState,
       hasChanged,
       hasChangedState: state => hasState(state) && hasChanged(),
+      nextState,
       //
       // setters
       setState: state => _changeTo(state),
