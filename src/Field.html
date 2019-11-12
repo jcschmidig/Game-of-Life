@@ -26,12 +26,13 @@
   export const fState = { alive: 1, dead: 0 }
   //
   export const createField = (_pos = 0, _dimension = 1) => {
-    const row = Math.floor(_pos / _dimension),
-      col = _pos % _dimension
     let _state = fState.dead,
       _prevState = _state
     //
-    const hasChanged = () => _state ^ _prevState,
+    const row = Math.floor(_pos / _dimension),
+      col = _pos % _dimension,
+      //
+      hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
       nextState = count => +(count === 3 || count - _state === 3),
       //
@@ -48,6 +49,7 @@
       //
       // dynamic getters
       state: () => _state,
+      state2: _state,
       hasState,
       hasChanged,
       hasChangedState: state => hasState(state) && hasChanged(),

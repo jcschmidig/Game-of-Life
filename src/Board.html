@@ -76,8 +76,8 @@
       //
       countNgbAlive = (row, col) =>
         counter(
-          matrix,
-          (count, mx) => count + _stateCount(row + mx[0], col + mx[1])
+          Ngbhood,
+          (count, ngb) => count + _stateCount(row + ngb[0], col + ngb[1])
         ),
       //
       _stateCount = (r, c) =>
@@ -110,5 +110,5 @@
   //
   /*** Neighborhood ***/
   const _base = [-1, 0, 1],
-    matrix = Array.from(_base, x => Array.from(_base, y => [x, y])).flat()
+    Ngbhood = Array.from(_base, x => Array.from(_base, y => [x, y])).flat()
 </script>
