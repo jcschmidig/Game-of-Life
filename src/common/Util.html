@@ -4,21 +4,24 @@
   /***  Component Interface ***/
   export const counter = (obj, reducer) => obj.reduce(reducer, 0),
     //
-    objCounter = (obj, action, ...args) =>
+    objCounter = obj => (action, ...args) =>
       counter(obj, (acc, o) => acc + o[action](...args)),
+    //
+    propCounter = obj => (action, ...args) =>
+      counter(obj, (acc, o) => acc + action(o, ...args)),
     //
     builder = (obj, reducer) => obj.reduce(reducer, []),
     //
-    filler = (obj, action) => builder(obj, (acc, o) => (action(acc, o), acc)),
+    filler = obj => action => builder(obj, (acc, o) => (action(acc, o), acc)),
     //
-    pusher = (obj, action) => filler(obj, (acc, o) => acc.push(action(o))),
+    pusher = obj => action => filler(obj)((acc, o) => acc.push(action(o))),
     //
-    mapper = (obj, action, arr) => obj.map((o, idx) => o[action](arr[idx])),
+    mapper = obj => (action, arr) => obj.map((o, idx) => o[action](arr[idx])),
     //
-    call = (verb, ...prop) => obj => obj[verb](...prop),
+    call = (verb, ...prop) => obj => verb && obj[verb](...prop),
     //
     fillArray = (size, action, ...args) =>
-      Array.from({ length: size }, (_, idx) => action(idx, ...args)),
+      Array.from({ length: size }, (_, idx) => action && action(idx, ...args)),
     //
     setFocus = async element =>
       void (await tick(), document.getElementById(element).focus()),
@@ -33,6 +36,7 @@
     checkOr = (...values) => (action, ...args) =>
       values.some(value => action(value, ...args)),
     //
-    checkBorder = (value, upper, lower = -1) => value > lower && value < upper
+    checkBorder = (value, upper = Infinity, lower = -1) =>
+      value > lower && value < upper
   //
 </script>

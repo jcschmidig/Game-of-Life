@@ -34,7 +34,7 @@
 
 <script context="module">
   import {
-    counter,
+    propCounter,
     objCounter,
     filler,
     pusher,
@@ -51,41 +51,45 @@
     const size = _dimension ** 2,
       _fields = fillArray(size, createField, _dimension),
       //
-      rows = filler(_fields, (acc, field) =>
+      rows = filler(_fields)((acc, field) =>
         field.col ? acc[acc.length - 1].push(field) : acc.push([field])
       ),
-      _getField = (row, col) => rows[row][col],
+      _getField = index => rows[index.row][index.col],
       //
       _doMeasure = (action, ...arg) =>
         void (_measure && _measure.start(),
         (generation = action(...arg)),
         _measure && _measure.stop()),
       //
-      _flip = index => (_getField(index.row, index.col).flip(), +generation),
+      _flip = index => (_getField(index).flip(), +generation),
       //
       _fill = action => (action ? (_fields.map(call(action)), 0) : ""),
       //
       _next = () => (
-        mapper(_fields, "setState", _getNextStates()), generation + 1
+        mapper(_fields)("setState", _getNextStates()), generation + 1
       ),
       //
       _getNextStates = () =>
-        pusher(_fields, field =>
-          field.nextState(countNgbAlive(field.row, field.col))
+        pusher(_fields)(field =>
+          field.nextState(
+            propCounter(Neighborhood)(_checkAlive, field.row, field.col)
+          )
         ),
       //
-      countNgbAlive = (row, col) =>
-        counter(
-          Ngbhood,
-          (count, ngb) => count + _stateCount(row + ngb[0], col + ngb[1])
-        ),
-      //
-      _stateCount = (r, c) =>
-        _checkBorder(r) && _checkBorder(c) && _getField(r, c).state(),
+      _checkAlive = (o, row, col) =>
+        _checkBorder((row += o[0])) &&
+        _checkBorder((col += o[1])) &&
+        _getField({ row, col }).state(),
       //
       _checkBorder = value => checkBorder(value, _dimension),
       //
-      _fieldCount = (attr, state) => objCounter(_fields, attr, state)
+      _fieldCount = (prop, state) => objCounter(_fields)(prop, state),
+      //
+      /*** Neighborhood ***/
+      _base = [-1, 0, 1],
+      Neighborhood = Array.from(_base, x =>
+        Array.from(_base, y => [x, y])
+      ).flat()
     //
     /*** Component Interface ***/
     return {
@@ -107,8 +111,4 @@
       flip: index => _doMeasure(_flip, index)
     }
   }
-  //
-  /*** Neighborhood ***/
-  const _base = [-1, 0, 1],
-    Ngbhood = Array.from(_base, x => Array.from(_base, y => [x, y])).flat()
 </script>
