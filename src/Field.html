@@ -14,7 +14,7 @@
 
   /*** Observables ***/
   // background color based on state
-  $: _colorState = state ? "is-info" : ""
+  $: _colorState = state ? "is-success" : ""
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),
@@ -35,7 +35,7 @@
       hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
       hasChangedState = state => hasState(state) && hasChanged(),
-      nextState = count => +(count === 3 || count - _state === 3),
+      nextState = count => +(count === 4 ? _state : count === 3),
       //
       _set = (state = fState.dead, prevState = state) =>
         void ((_state = state), (_prevState = prevState)),

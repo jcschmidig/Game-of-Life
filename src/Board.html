@@ -45,11 +45,11 @@
   } from "./common/Util.html"
   import { createField } from "./Field.html"
 
-  export const createBoard = (_dimension = 0, _measure = null) => {
+  export const createBoard = (dimension = 0, measure = null) => {
     let generation
     //
-    const size = _dimension ** 2,
-      _fields = fillArray(size, createField, _dimension),
+    const size = dimension ** 2,
+      _fields = fillArray(size, createField, dimension),
       //
       rows = filler(_fields)((acc, field) =>
         field.col ? acc[acc.length - 1].push(field) : acc.push([field])
@@ -57,9 +57,9 @@
       _getField = index => rows[index.row][index.col],
       //
       _doMeasure = (action, ...arg) =>
-        void (_measure && _measure.start(),
+        void (measure && measure.start(),
         (generation = action(...arg)),
-        _measure && _measure.stop()),
+        measure && measure.stop()),
       //
       _flip = index => (_getField(index).flip(), +generation),
       //
@@ -81,7 +81,7 @@
         _checkBorder((col += o[1])) &&
         _getField({ row, col }).state(),
       //
-      _checkBorder = value => checkBorder(value, _dimension),
+      _checkBorder = value => checkBorder(value, dimension),
       //
       _fieldCount = (prop, state) => objCounter(_fields)(prop, state),
       //
