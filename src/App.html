@@ -25,7 +25,8 @@
 />
 <Game {status} {calc} showTitle="{show.title}" {showDiff} on:click="{next}" />
 <Board
-  {rows}
+  {fields}
+  {screenWidth}
   {cellWidth}
   on:flip="{flip}"
   on:measure="{measureRun}"
@@ -44,25 +45,19 @@
     show = createMeasure("Display")
 
   /*** Observables ***/
-  let board,
-    rows = [],
-    status,
-    showDiff,
-    cellWidth
+  let board, fields, status, showDiff, cellWidth, screenWidth
   $: if (board) {
-    rows = board.rows
+    fields = board.fields
+    cellWidth = Math.floor(
+      document.getElementById(markOffset).offsetWidth / Math.sqrt(board.size)
+    )
+    screenWidth = cellWidth * Math.sqrt(board.size)
     status = {
       size: board.size,
       generation: board.generation(),
-      isReady: board.isReady(),
       countState: board.countState,
       countChangedState: board.countChangedState
     }
-  }
-  $: if (rows.length) {
-    cellWidth = Math.floor(
-      document.getElementById(markOffset).offsetWidth / rows.length
-    )
   }
 
   /*** events ***/

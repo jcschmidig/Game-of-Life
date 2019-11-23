@@ -6,7 +6,7 @@
     disabled="{!_nextEnabled}"
     on:click
   >
-    {_showName}
+    + Generation ({_counter || 0})
   </button>
   <span class="tag is-medium is-success is-light">Birth: {blank(_birth)}</span>
   <span class="tag is-medium is-danger is-light">Dead: {blank(_dead)}</span>
@@ -20,9 +20,7 @@
   <span class="tag is-medium is-info"
     >{showTitle}: {blank(showDiff)+calc.unit}</span
   >
-  <span class="tag is-medium is-info is-light"
-    >Total: {blank(_birth + _death)}</span
-  >
+  <span class="tag is-medium is-info is-light">Total: {blank(_total)}</span>
 </section>
 
 <style>
@@ -42,22 +40,15 @@
   export let status, calc, showTitle, showDiff
 
   /*** Observables ***/
-  let _alive,
-    _dead,
-    _birth,
-    _death,
-    _timeCalc,
-    _showgen = "-",
-    _nextEnabled
+  let _alive, _dead, _birth, _death, _total, _timeCalc, _counter, _nextEnabled
   $: if (status) {
     _alive = status.countState(fState.alive)
     _dead = status.size - _alive
     _birth = status.countChangedState(fState.alive)
     _death = status.countChangedState(fState.dead)
+    _total = _birth + _death
     _timeCalc = calc.diff()
-    _showgen = status.generation === "" ? "-" : status.generation
-    _showName = "+ Generation (" + _showgen + ")"
-    _nextEnabled = status.isReady || _birth || _death
+    _counter = status.generation
+    _nextEnabled = _alive && _total
   }
-  $: _showName = "+ Generation (" + _showgen + ")"
 </script>

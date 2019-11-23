@@ -1,8 +1,20 @@
-<td class="{_colorState}" style="height: {cellWidth}px;" on:click="{flip}"></td>
+<g
+  ><rect
+    height="{cellWidth}"
+    width="{cellWidth}"
+    class="{_colorState}"
+    {x}
+    {y}
+    on:click="{flip}"
+  ></rect
+></g>
 
 <style>
-  td {
-    padding: 0;
+  .alive {
+    fill: #00d1b2;
+  }
+  .dead {
+    fill: #ddd;
   }
 </style>
 
@@ -10,15 +22,17 @@
   import { createEventDispatcher } from "svelte"
 
   /***  Default Component Interface ***/
-  export let row, col, state, cellWidth
+  export let pos, row, col, state, cellWidth
 
   /*** Observables ***/
   // background color based on state
-  $: _colorState = state ? "is-success" : ""
+  $: _colorState = state ? "alive" : "dead"
+  $: x = cellWidth * col + 1
+  $: y = cellWidth * row + 1
 
   /*** Events ***/
   const dispatch = createEventDispatcher(),
-    flip = () => dispatch("flip", { row, col })
+    flip = () => dispatch("flip", pos)
 </script>
 
 <script context="module">
@@ -45,9 +59,9 @@
     return {
       //
       // static getters
+      pos,
       row,
       col,
-      //
       // dynamic getters
       state: () => _state,
       hasState,
@@ -58,7 +72,7 @@
       // setters
       setState: state => _changeTo(state),
       setEmpty: () => _set(),
-      setRandom: () => _set(+(Math.round(Math.random() * 6) > 3)),
+      setRandom: () => _changeTo(+(Math.round(Math.random() * 6) > 3)),
       flip: () => _changeTo(+!_state)
     }
   }
