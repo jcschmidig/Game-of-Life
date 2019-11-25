@@ -77,10 +77,8 @@
           )
         ),
       //
-      _checkAlive = (ngb, row, col, r=row+ngb[0], c=col+ngb[1]) =>
-        _checkBorder(r) &&
-        _checkBorder(c) &&
-        _rows[r][c].state(),
+      _checkAlive = (ngb, row, col, r = row + ngb[0], c = col + ngb[1]) =>
+        _checkBorder(r) && _checkBorder(c) && _rows[r][c].state(),
       //
       _checkBorder = value => checkBorder(value, dimension),
       //

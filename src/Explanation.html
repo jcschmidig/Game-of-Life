@@ -1,46 +1,28 @@
+<h4 class="title is-4">Use</h4>
 <article>
-  <h4 class="title is-4">Use</h4>
-  <table class="table">
-    <tr>
-      <td class="eTitle">
-        <span class="tag is-light is-medium"
-          ><strong>Board length</strong></span
-        >
-      </td>
-      <td>To define the size of the board (length x length).</td>
-    </tr>
-    <tr>
-      <td class="eTitle">
-        <span class="button is-primary is-active">Create Board</span>
-      </td>
-      <td>To display a randomly setup board.</td>
-    </tr>
-    <tr>
-      <td class="eTitle">
-        <span class="button is-primary is-active">Clear Board</span>
-      </td>
-      <td>
-        To setup an empty board. You may create your own game by clicking on any
-        cell to flip its state.
-      </td>
-    </tr>
-    <tr>
-      <td class="eTitle">
-        <span class="button is-primary is-active">+ Generation</span>
-      </td>
-      <td>To trigger the next generation.</td>
-    </tr>
-  </table>
+  <span class="tag is-light is-medium"><strong>Board length</strong></span>
+  <span>To define the size of the board (length x length).</span>
+  <span class="button is-primary is-active">Create Board</span>
+  <span>To display a randomly setup board.</span>
+  <span class="button is-primary is-active">Clear Board</span>
+  <span>
+    To setup an empty board. You may create your own game by clicking on any
+    cell to flip its state.
+  </span>
+  <span class="button is-primary is-active">+ Generation</span>
+  <span>To trigger the next generation.</span>
 </article>
 
 <style>
+  h4 {
+    padding: 0 1.25rem;
+    margin: 0 !important;
+  }
   article {
-      padding-left: 1.25rem;
-  }
-  td {
-    vertical-align: middle;
-  }
-  .eTitle {
-    text-align: center !important;
+    padding: 1.25rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    grid-gap: 5px 10px;
   }
 </style>
