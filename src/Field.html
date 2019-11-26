@@ -1,43 +1,6 @@
-<g
-  ><rect
-    height="{cellWidth}"
-    width="{cellWidth}"
-    class="{_colorState}"
-    {x}
-    {y}
-    on:click="{flip}"
-  ></rect
-></g>
-
-<style>
-  .alive {
-    fill: #00d1b2;
-  }
-  .dead {
-    fill: #ddd;
-  }
-</style>
-
-<script>
-  import { createEventDispatcher } from "svelte"
-
-  /***  Default Component Interface ***/
-  export let pos, row, col, state, cellWidth
-
-  /*** Observables ***/
-  // background color based on state
-  $: _colorState = state ? "alive" : "dead"
-  $: x = cellWidth * col + 1
-  $: y = cellWidth * row + 1
-
-  /*** Events ***/
-  const dispatch = createEventDispatcher(),
-    flip = () => dispatch("flip", pos)
-</script>
-
 <script context="module">
   /*** field states ***/
-  export const fState = { alive: 1, dead: 0 }
+  export const fState = { alive: true, dead: false }
   //
   export const createField = (pos = 0, dimension = 1) => {
     let _state = fState.dead,
@@ -49,7 +12,7 @@
       hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
       hasChangedState = state => hasState(state) && hasChanged(),
-      nextState = count => +(count === 4 ? _state : count === 3),
+      nextState = count => (count === 4 ? _state : count === 3),
       //
       _set = (state = fState.dead, prevState = state) =>
         void ((_state = state), (_prevState = prevState)),
@@ -59,11 +22,9 @@
     return {
       //
       // static getters
-      pos,
-      row,
-      col,
+      stat: { row, col, state: () => _state },
+      //
       // dynamic getters
-      state: () => _state,
       hasState,
       hasChanged,
       hasChangedState,
@@ -72,8 +33,8 @@
       // setters
       setState: state => _changeTo(state),
       setEmpty: () => _set(),
-      setRandom: () => _changeTo(+(Math.round(Math.random() * 6) > 3)),
-      flip: () => _changeTo(+!_state)
+      setRandom: () => _changeTo(Math.random() * 6 > 4),
+      flip: () => _changeTo(!_state)
     }
   }
 </script>

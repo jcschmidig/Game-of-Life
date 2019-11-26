@@ -1,9 +1,9 @@
 <section class="container box">
   {#if fields}
-  <svg style="width: {screenWidth}px; height: {screenWidth}px;">
-    {#each fields as {pos, row, col, state}}
-    <Field {pos} {row} {col} state="{state()}" {cellWidth} on:flip />
-    {/each}
+  <svg width="{screenWidth}" height="{screenWidth}">
+    {#each fields as {row, col, state}} <rect height={cellWidth}
+    width={cellWidth} class:alive={state()} x={cellWidth * col + 1} y={cellWidth
+    * row + 1} on:click={() => dispatch("flip", [row, col])} /> {/each}
   </svg>
   {:else}
   <Explanation />
@@ -18,12 +18,15 @@
   svg {
     display: block;
     margin: auto;
+    fill: #ddd;
+  }
+  rect.alive {
+    fill: #00d1b2;
   }
 </style>
 
 <script>
   import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
-  import Field from "./Field.html"
   import Explanation from "./Explanation.html"
 
   /*** Default Component Interface ***/
@@ -39,7 +42,6 @@
   import {
     propCounter,
     objCounter,
-    filler,
     pusher,
     mapper,
     fillArray,
@@ -52,37 +54,38 @@
     let generation = 0
     //
     const size = dimension ** 2,
-      fields = fillArray(size, createField, dimension),
-      _rows = filler(fields)((acc, field) =>
-        field.col ? acc[acc.length - 1].push(field) : acc.push([field])
-      ),
+      _fields = fillArray(size, createField, dimension),
+      fields = _fields.map(f => f.stat),
+      _index = (row, col) => row * dimension + col,
+      _field = (row, col, idx = _index(row, col)) => _fields[idx],
+      _stat = (row, col, idx = _index(row, col)) => fields[idx],
       //
       _doMeasure = (action, ...arg) =>
         void (measure && measure.start(),
         (generation = action(...arg)),
         measure && measure.stop()),
       //
-      _flip = index => (fields[index].flip(), generation),
+      _flip = idx => (_field(...idx).flip(), generation),
       //
-      _fill = action => (fields.map(call(action)), 0),
+      _fill = action => (_fields.map(call(action)), 0),
       //
       _next = () => (
-        mapper(fields)("setState", _getNextStates()), generation + 1
+        mapper(_fields)("setState", _getNextStates()), generation + 1
       ),
       //
       _getNextStates = () =>
-        pusher(fields)(field =>
-          field.nextState(
-            propCounter(Neighborhood)(_checkAlive, field.row, field.col)
-          )
+        pusher(_fields)(field =>
+          field.nextState(propCounter(Neighborhood)(_checkAlive, field.stat))
         ),
       //
-      _checkAlive = (ngb, row, col, r = row + ngb[0], c = col + ngb[1]) =>
-        _checkBorder(r) && _checkBorder(c) && _rows[r][c].state(),
+      _checkAlive = (ngb, { row, col }) =>
+        _checkBorder((row += ngb[0])) &&
+        _checkBorder((col += ngb[1])) &&
+        _stat(row, col).state(),
       //
       _checkBorder = value => checkBorder(value, dimension),
       //
-      _fieldCount = (prop, state) => objCounter(fields)(prop, state),
+      _fieldCount = (prop, state) => objCounter(_fields)(prop, state),
       //
       /*** Neighborhood ***/
       _base = [-1, 0, 1],
