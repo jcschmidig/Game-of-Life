@@ -6,7 +6,7 @@
     disabled="{!_nextEnabled}"
     on:click
   >
-    + Generation ({_counter || 0})
+    + Generation ({zero(_counter)})
   </button>
   <span class="tag is-medium is-success is-light">Birth: {blank(_birth)}</span>
   <span class="tag is-medium is-danger is-light">Dead: {blank(_dead)}</span>
@@ -26,15 +26,16 @@
 <style>
   .container {
     display: grid;
-    grid: repeat(3, 1fr) / 1fr minmax(180px, 1fr) 1fr;
+    grid-template-columns: 1fr minmax(180px, 1fr) 1fr;
     align-items: center;
-    grid-gap: 0 10px;
+    grid-gap: 10px;
   }
 </style>
 
 <script>
-  import { blank } from "./common/Util.html"
+  import { blank, zero } from "./common/Util.html"
   import { fState } from "./Field.html"
+  const { alive, dead } = fState
 
   /*** Default Component Interface ***/
   export let status, calc, showTitle, showDiff
@@ -42,10 +43,10 @@
   /*** Observables ***/
   let _alive, _dead, _birth, _death, _total, _timeCalc, _counter, _nextEnabled
   $: if (status) {
-    _alive = status.countState(fState.alive)
+    _alive = status.countState(alive)
     _dead = status.size - _alive
-    _birth = status.countChangedState(fState.alive)
-    _death = status.countChangedState(fState.dead)
+    _birth = status.countChangedState(alive)
+    _death = status.countChangedState(dead)
     _total = _birth + _death
     _timeCalc = calc.diff()
     _counter = status.generation

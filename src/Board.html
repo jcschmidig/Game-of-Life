@@ -1,15 +1,15 @@
 <section class="container box">
-  {#if fields} {#if cellWidth}
+  {#if fields && cellWidth}
   <svg width="{screenWidth}" height="{screenWidth}">
     {#each fields as {stat}} <rect height={cellWidth} width={cellWidth}
     class:alive={stat.state()} x={cellWidth * stat.col + 1} y={cellWidth *
     stat.row + 1} on:click={() => dispatch("flip", [stat.row, stat.col])} />
     {/each}
   </svg>
-  {:else}
-  <h2 class="title is-2 has-text-centered">Screen too small!</h2>
-  {/if} {:else}
+  {/if} {#if !fields}
   <Explanation />
+  {/if}{#if fields && !cellWidth}
+  <h2 class="title is-2 has-text-centered">Screen too small!</h2>
   {/if}
 </section>
 
