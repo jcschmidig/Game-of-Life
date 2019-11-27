@@ -7,7 +7,7 @@
 	by jean-claude@schmidig.email
 -->
 <section class="section container">
-  <h1 class="title">
+  <h1 class="title is-1 has-text-centered">
     <a
       href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
       target="_blank"
@@ -62,11 +62,8 @@
   }
 
   /*** events ***/
-  const evt = (action, newBoard = false) => (
-      event,
-      prop = event.detail,
-      dim = prop
-    ) => (board = (newBoard && createBoard(dim, calc)) || board)[action](prop),
+  const evt = (action, newBoard = false) => (event, prop = event.detail) =>
+      (board = (newBoard && createBoard(prop, calc)) || board)[action](prop),
     //
     // Propagated by component Start
     clear = evt("clear", true),

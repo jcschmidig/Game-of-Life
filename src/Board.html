@@ -1,11 +1,14 @@
 <section class="container box">
-  {#if fields}
+  {#if fields} {#if cellWidth}
   <svg width="{screenWidth}" height="{screenWidth}">
-    {#each fields as {row, col, state}} <rect height={cellWidth}
-    width={cellWidth} class:alive={state()} x={cellWidth * col + 1} y={cellWidth
-    * row + 1} on:click={() => dispatch("flip", [row, col])} /> {/each}
+    {#each fields as {stat}} <rect height={cellWidth} width={cellWidth}
+    class:alive={stat.state()} x={cellWidth * stat.col + 1} y={cellWidth *
+    stat.row + 1} on:click={() => dispatch("flip", [stat.row, stat.col])} />
+    {/each}
   </svg>
   {:else}
+  <h2 class="title is-2 has-text-centered">Screen too small!</h2>
+  {/if} {:else}
   <Explanation />
   {/if}
 </section>
@@ -54,11 +57,10 @@
     let generation = 0
     //
     const size = dimension ** 2,
-      _fields = fillArray(size, createField, dimension),
-      fields = _fields.map(f => f.stat),
-      _index = (row, col) => row * dimension + col,
-      _field = (row, col, idx = _index(row, col)) => _fields[idx],
-      _stat = (row, col, idx = _index(row, col)) => fields[idx],
+      fields = fillArray(size, createField, dimension),
+      _index = obj => (row, col) => obj[row * dimension + col],
+      _field = (row, col) => _index(fields)(row, col),
+      _state = (row, col) => _field(row, col).stat.state(),
       //
       _doMeasure = (action, ...arg) =>
         void (measure && measure.start(),
@@ -67,30 +69,30 @@
       //
       _flip = idx => (_field(...idx).flip(), generation),
       //
-      _fill = action => (_fields.map(call(action)), 0),
+      _fill = action => (fields.map(call(action)), 0),
       //
       _next = () => (
-        mapper(_fields)("setState", _getNextStates()), generation + 1
+        mapper(fields)("setState", _getNextStates()), generation + 1
       ),
       //
       _getNextStates = () =>
-        pusher(_fields)(field =>
+        pusher(fields)(field =>
           field.nextState(propCounter(Neighborhood)(_checkAlive, field.stat))
         ),
       //
       _checkAlive = (ngb, { row, col }) =>
         _checkBorder((row += ngb[0])) &&
         _checkBorder((col += ngb[1])) &&
-        _stat(row, col).state(),
+        _state(row, col),
       //
       _checkBorder = value => checkBorder(value, dimension),
       //
-      _fieldCount = (prop, state) => objCounter(_fields)(prop, state),
+      _fieldCount = (prop, state) => objCounter(fields)(prop, state),
       //
       /*** Neighborhood ***/
-      _base = [-1, 0, 1],
-      Neighborhood = Array.from(_base, x =>
-        Array.from(_base, y => [x, y])
+      _matrix = [-1, 0, 1],
+      Neighborhood = Array.from(_matrix, x =>
+        Array.from(_matrix, y => [x, y])
       ).flat()
     //
     /*** Component Interface ***/
