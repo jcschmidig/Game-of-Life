@@ -23,14 +23,21 @@
   on:clear="{clear}"
   on:create="{create}"
 />
-<Game {status} {calc} showTitle="{show.title}" {showDiff} on:click="{next}" />
+<Game
+  {status}
+  calcTitle="{calc.title}"
+  {calcDiff}
+  showTitle="{show.title}"
+  {showDiff}
+  on:click="{next}"
+/>
 <Board
   {fields}
   {screenWidth}
   {cellWidth}
   on:flip="{flip}"
-  on:measure="{measureRun}"
-  on:unmeasure="{measureStop}"
+  on:startMeasure="{startMeasure}"
+  on:endMeasure="{endMeasure}"
 />
 
 <script>
@@ -39,19 +46,18 @@
   import Board, { createBoard } from "./Board.html"
   import { createMeasure } from "./common/Measure.html"
   //
-  const [defDimension, dimMin, dimMax] = [15, 3, Math.floor(Math.sqrt(1e6))],
+  const [defDimension, dimMin, dimMax] = [15, 3, 1000],
     markOffset = "idOffset",
     calc = createMeasure("Calc"),
-    show = createMeasure("Display")
+    show = createMeasure("Display"),
+    mCalc = (...arg) => void (calcDiff = calc.measure(...arg))
 
   /*** Observables ***/
-  let board, fields, length, status, showDiff, cellWidth, screenWidth
+  let board, fields, length, status, showDiff, calcDiff, cellWidth, screenWidth
   $: if (board) {
     fields = board.fields
     length = Math.sqrt(board.size)
-    cellWidth = Math.floor(
-      document.getElementById(markOffset).offsetWidth / length
-    )
+    cellWidth = ~~(document.getElementById(markOffset).offsetWidth / length)
     screenWidth = cellWidth * length
     status = {
       size: board.size,
@@ -63,7 +69,7 @@
 
   /*** events ***/
   const evt = (action, newBoard = false) => (event, prop = event.detail) =>
-      (board = (newBoard && createBoard(prop, calc)) || board)[action](prop),
+      mCalc((board = (newBoard && createBoard(prop)) || board)[action], prop),
     //
     // Propagated by component Start
     clear = evt("clear", true),
@@ -72,6 +78,6 @@
     next = evt("next"),
     // Propagated by component Board
     flip = evt("flip"),
-    measureRun = () => show.start(),
-    measureStop = () => (showDiff = show.stop())
+    startMeasure = () => show.start(),
+    endMeasure = () => (showDiff = show.end())
 </script>

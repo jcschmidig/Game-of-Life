@@ -2,12 +2,12 @@
   /*** field states ***/
   export const fState = { alive: true, dead: false }
   //
-  export const createField = (pos = 0, dimension = 1) => {
+  export const createField = (pos, dimension) => {
     let _state = fState.dead,
       _prevState = _state
     //
-    const row = Math.floor(pos / dimension),
-      col = pos % dimension,
+    const row = ~~(pos / dimension),
+      col = pos % dimension || 0,
       //
       hasChanged = () => _state ^ _prevState,
       hasState = state => _state === state,
@@ -23,14 +23,12 @@
       //
       // static getters
       stat: { row, col, state: () => _state },
-      //
-      // dynamic getters
+      // dynamic getters ----------------
       hasState,
       hasChanged,
       hasChangedState,
       nextState,
-      //
-      // setters
+      // setters ------------------------
       setState: state => _changeTo(state),
       setEmpty: () => _set(),
       setRandom: () => _changeTo(Math.random() * 6 > 4),

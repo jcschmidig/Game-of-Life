@@ -6,7 +6,7 @@
     stat.row + 1} on:click={() => dispatch("flip", [stat.row, stat.col])} />
     {/each}
   </svg>
-  {/if} {#if !fields}
+  {/if}{#if !fields}
   <Explanation />
   {/if}{#if fields && !cellWidth}
   <h2 class="title is-2 has-text-centered">Screen too small!</h2>
@@ -37,47 +37,31 @@
 
   /*** events ***/
   const dispatch = createEventDispatcher()
-  beforeUpdate(() => dispatch("measure"))
-  afterUpdate(() => dispatch("unmeasure"))
+  beforeUpdate(() => dispatch("startMeasure"))
+  afterUpdate(() => dispatch("endMeasure"))
 </script>
 
 <script context="module">
-  import {
-    propCounter,
-    objCounter,
-    pusher,
-    mapper,
-    fillArray,
-    call,
-    checkBorder
-  } from "./common/Util.html"
+  import * as u from "./common/Util.html"
   import { createField } from "./Field.html"
 
-  export const createBoard = (dimension = 0, measure = null) => {
-    let generation = 0
+  export const createBoard = (dimension = 0) => {
+    let generation
     //
     const size = dimension ** 2,
-      fields = fillArray(size, createField, dimension),
+      fields = u.fillArray(size, createField, dimension),
       _index = obj => (row, col) => obj[row * dimension + col],
       _field = (row, col) => _index(fields)(row, col),
       _state = (row, col) => _field(row, col).stat.state(),
-      //
-      _doMeasure = (action, ...arg) =>
-        void (measure && measure.start(),
-        (generation = action(...arg)),
-        measure && measure.stop()),
-      //
-      _flip = idx => (_field(...idx).flip(), generation),
-      //
-      _fill = action => (fields.map(call(action)), 0),
+      clear = () => void (generation = 0),
       //
       _next = () => (
-        mapper(fields)("setState", _getNextStates()), generation + 1
+        u.mapper(fields)("setState", _getNextStates()), generation + 1
       ),
       //
       _getNextStates = () =>
-        pusher(fields)(field =>
-          field.nextState(propCounter(Neighborhood)(_checkAlive, field.stat))
+        u.pusher(fields)(field =>
+          field.nextState(u.propCounter(Neighborhood)(_checkAlive, field.stat))
         ),
       //
       _checkAlive = (ngb, { row, col }) =>
@@ -85,9 +69,9 @@
         _checkBorder((col += ngb[1])) &&
         _state(row, col),
       //
-      _checkBorder = value => checkBorder(value, dimension),
+      _checkBorder = value => u.checkLimit(value, dimension),
       //
-      _fieldCount = (prop, state) => objCounter(fields)(prop, state),
+      _fieldCount = (prop, state) => u.objCounter(fields)(prop, state),
       //
       /*** Neighborhood ***/
       _matrix = [-1, 0, 1],
@@ -97,21 +81,18 @@
     //
     /*** Component Interface ***/
     return {
-      //
-      // static getters
+      // static getters ---------------------
       size,
       fields,
-      //
-      // dynamic getters
+      // dynamic getters --------------------
       generation: () => generation,
       countState: state => _fieldCount("hasState", state),
       countChangedState: state => _fieldCount("hasChangedState", state),
-      //
-      // setters
-      clear: () => _doMeasure(_fill),
-      create: () => _doMeasure(_fill, "setRandom"),
-      next: () => _doMeasure(_next),
-      flip: index => _doMeasure(_flip, index)
+      // setters ----------------------------
+      clear,
+      create: () => (u.runner(fields)("setRandom"), clear()),
+      next: () => void (generation = _next()),
+      flip: index => _field(...index).flip()
     }
   }
 </script>

@@ -22,7 +22,7 @@
 <style>
   .container {
     display: grid;
-    grid-template-columns: 101px 2fr 2fr;
+    grid-template-columns: 101px 1fr 1fr;
     align-items: end;
     grid-gap: 0 10px;
   }
@@ -48,7 +48,8 @@
       void (dimension = checkMinMax(dim, dimMin, dimMax)),
     //
     dispatch = createEventDispatcher(),
-    evt = (action, focus) => (setFocus(focus), dispatch(action, dimension)),
+    evt = (action, focus) =>
+      void (setFocus(focus), dispatch(action, dimension)),
     createBoard = () => evt("create", "next"),
     clearBoard = () => evt("clear", "dim")
   //

@@ -16,9 +16,9 @@
     //
     pusher = obj => action => filler(obj)((acc, o) => acc.push(action(o))),
     //
-    mapper = obj => (action, arr) => obj.map((o, idx) => o[action](arr[idx])),
+    runner = obj => (action, ...arg) => obj.map(o => o[action](...arg)),
     //
-    call = (verb, ...prop) => obj => verb && obj[verb](...prop),
+    mapper = obj => (action, arr) => obj.map((o, idx) => o[action](arr[idx])),
     //
     fillArray = (size, action, ...args) =>
       Array.from({ length: size }, (_, idx) => action && action(idx, ...args)),
@@ -37,7 +37,7 @@
     checkOr = (...values) => (action, ...args) =>
       values.some(value => action(value, ...args)),
     //
-    checkBorder = (value, upper = Infinity, lower = -1) =>
+    checkLimit = (value, upper = Infinity, lower = -1) =>
       value > lower && value < upper
   //
 </script>

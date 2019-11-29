@@ -4,9 +4,11 @@
     //
     const title = _title,
       _now = () => window.performance.now(),
-      start = () => void (_m1 = _now()),
+      start = () => void ([_m1, _m2] = [_now(), null]),
       stop = () => void (_m2 = _now()),
-      diff = () => Math.floor((_m2 - _m1) * 1000) / 1000
+      diff = () => ~~((_m2 - _m1) * 1000) / 1000,
+      end = () => (stop(), diff()),
+      measure = (action, ...arg) => (start(), action(...arg), end())
     //
     /*** Component Interface ***/
     return {
@@ -17,7 +19,9 @@
       diff,
       // setters
       start,
-      stop: () => (stop(), diff())
+      stop,
+      end,
+      measure
     }
   }
 </script>
