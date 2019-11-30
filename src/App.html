@@ -50,7 +50,7 @@
     markOffset = "idOffset",
     calc = createMeasure("Calc"),
     show = createMeasure("Display"),
-    mCalc = (...arg) => void (calcDiff = calc.measure(...arg))
+    mCalc = (action, ...arg) => void (calcDiff = calc.start(action, ...arg))
 
   /*** Observables ***/
   let board, fields, length, status, showDiff, calcDiff, cellWidth, screenWidth
@@ -78,6 +78,6 @@
     next = evt("next"),
     // Propagated by component Board
     flip = evt("flip"),
-    startMeasure = () => show.start(),
-    endMeasure = () => (showDiff = show.end())
+    startMeasure = () => void show.start(),
+    endMeasure = () => void (showDiff = show.stop())
 </script>

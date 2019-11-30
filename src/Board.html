@@ -45,6 +45,10 @@
   import * as u from "./common/Util.html"
   import { createField } from "./Field.html"
 
+  /*** Neighborhood ***/
+  const _mx = [-1, 0, 1],
+    Neighborhood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
+
   export const createBoard = (dimension = 0) => {
     let generation
     //
@@ -54,10 +58,7 @@
       _field = (row, col) => _index(fields)(row, col),
       _state = (row, col) => _field(row, col).stat.state(),
       clear = () => void (generation = 0),
-      //
-      _next = () => (
-        u.mapper(fields)("setState", _getNextStates()), generation + 1
-      ),
+      inc = () => void ++generation,
       //
       _getNextStates = () =>
         u.pusher(fields)(field =>
@@ -71,13 +72,7 @@
       //
       _checkBorder = value => u.checkLimit(value, dimension),
       //
-      _fieldCount = (prop, state) => u.objCounter(fields)(prop, state),
-      //
-      /*** Neighborhood ***/
-      _matrix = [-1, 0, 1],
-      Neighborhood = Array.from(_matrix, x =>
-        Array.from(_matrix, y => [x, y])
-      ).flat()
+      _fieldCount = (prop, state) => u.objCounter(fields)(prop, state)
     //
     /*** Component Interface ***/
     return {
@@ -91,7 +86,7 @@
       // setters ----------------------------
       clear,
       create: () => (u.runner(fields)("setRandom"), clear()),
-      next: () => void (generation = _next()),
+      next: () => (u.mapper(fields)("setState", _getNextStates()), inc()),
       flip: index => _field(...index).flip()
     }
   }

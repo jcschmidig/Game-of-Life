@@ -1,27 +1,18 @@
 <script context="module">
-  export const createMeasure = _title => {
-    let _m1, _m2
+  export const createMeasure = title => {
+    let _start
     //
-    const title = _title,
-      _now = () => window.performance.now(),
-      start = () => void ([_m1, _m2] = [_now(), null]),
-      stop = () => void (_m2 = _now()),
-      diff = () => ~~((_m2 - _m1) * 1000) / 1000,
-      end = () => (stop(), diff()),
-      measure = (action, ...arg) => (start(), action(...arg), end())
+    const _now = () => window.performance.now(),
+      start = (act, ...a) => ((_start = _now()), act && (act(...a), stop())),
+      stop = start => ~~((_now() - (start || _start)) * 1000) / 1000
     //
     /*** Component Interface ***/
     return {
       // static getter
       title,
-      unit: "ms",
-      // dynamic getter
-      diff,
       // setters
       start,
-      stop,
-      end,
-      measure
+      stop
     }
   }
 </script>
