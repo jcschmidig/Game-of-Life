@@ -24,7 +24,7 @@
   on:create="{create}"
 />
 <Game
-  {status}
+  status="{board}"
   calcTitle="{calc.title}"
   {calcDiff}
   showTitle="{show.title}"
@@ -53,18 +53,13 @@
     mCalc = (action, ...arg) => void (calcDiff = calc.start(action, ...arg))
 
   /*** Observables ***/
-  let board, fields, length, status, showDiff, calcDiff, cellWidth, screenWidth
+  let board, fields, cellWidth, screenWidth, showDiff, calcDiff
   $: if (board) {
-    fields = board.fields
-    length = Math.sqrt(board.size)
-    cellWidth = ~~(document.getElementById(markOffset).offsetWidth / length)
-    screenWidth = cellWidth * length
-    status = {
-      size: board.size,
-      generation: board.generation(),
-      countState: board.countState,
-      countChangedState: board.countChangedState
-    }
+    fields = board.fields()
+    cellWidth = ~~(
+      document.getElementById(markOffset).offsetWidth / board.length
+    )
+    screenWidth = cellWidth * board.length
   }
 
   /*** events ***/

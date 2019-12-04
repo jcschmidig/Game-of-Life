@@ -1,15 +1,118 @@
+<script context="module">
+  import * as u from "./common/Util.html"
+  import * as f from "./Field.html"
+
+  /*** Neighborhood ***/
+  const _mx = [-1, 0, 1],
+    Neighborhood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
+
+  export const createBoard = (dimension = 0) => {
+    const size = dimension ** 2,
+      _index = idx => [~~(idx / dimension), idx % dimension]
+    let generation, nbAlive, nbBirth, nbDeath
+    let fields = Array.from({ length: size }, (_, idx) =>
+      f.create(..._index(idx))
+    )
+    //
+    const clear = () => void (generation = nbAlive = nbBirth = nbDeath = 0),
+      _field = (row, col) => fields[row * dimension + col],
+      _state = (row, col) => f.state(_field(row, col)),
+      //
+      _nextStates = (row, col, state) =>
+        fields.map(
+          field => (
+            ({ row, col, state } = f.prop(field)),
+            f.create(
+              row,
+              col,
+              _calcChange(
+                state,
+                f.nextState(
+                  state,
+                  u.propCounter(Neighborhood)(_checkAlive, { row, col })
+                )
+              )
+            )
+          )
+        ),
+      //
+      _checkAlive = (ngb, { row, col }) =>
+        _checkBorder((row += ngb[0])) &&
+        _checkBorder((col += ngb[1])) &&
+        _state(row, col),
+      //
+      _checkBorder = value => u.checkLimit(value, dimension),
+      //
+      create = () =>
+        void (clear(),
+        fields.map(field => _process(field, f.setRandom)),
+        (nbAlive = nbBirth)),
+      //
+      next = () =>
+        void ((nbBirth = nbDeath = 0),
+        (fields = _nextStates()),
+        ++generation,
+        (nbAlive += nbBirth - nbDeath)),
+      //
+      flip = (index, newState) =>
+        void ((newState = _process(_field(...index), f.flipState)),
+        (nbAlive += newState ? +1 : -1)),
+      //
+      _process = (field, action) => _calcChange(action(field), f.state(field)),
+      //
+      _calcChange = (state, nextState, change) => (
+        (change = state !== nextState),
+        (nbBirth += change * nextState),
+        (nbDeath += change * !nextState),
+        nextState
+      )
+    //
+    /*** Component Interface ***/
+    return {
+      // static getters ---------------------
+      length: dimension,
+      // dynamic getters --------------------
+      generation: () => generation,
+      fields: () => fields,
+      countAlive: () => nbAlive,
+      countDead: () => size - nbAlive,
+      countBirth: () => nbBirth,
+      countDeath: () => nbDeath,
+      // setters ----------------------------
+      clear,
+      create,
+      next,
+      flip
+    }
+  }
+</script>
+
+<script>
+  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
+  import { row, col, state } from "./Field.html"
+  import Explanation from "./Explanation.html"
+
+  /*** Default Component Interface ***/
+  export let fields, screenWidth, cellWidth
+
+  /*** events ***/
+  const dispatch = createEventDispatcher()
+  beforeUpdate(() => dispatch("startMeasure"))
+  afterUpdate(() => dispatch("endMeasure"))
+</script>
+
 <section class="container box">
-  {#if fields && cellWidth}
-  <svg width="{screenWidth}" height="{screenWidth}">
-    {#each fields as {stat}} <rect height={cellWidth} width={cellWidth}
-    class:alive={stat.state()} x={cellWidth * stat.col + 1} y={cellWidth *
-    stat.row + 1} on:click={() => dispatch("flip", [stat.row, stat.col])} />
-    {/each}
-  </svg>
-  {/if}{#if !fields}
+  {#if !fields}
   <Explanation />
   {/if}{#if fields && !cellWidth}
   <h2 class="title is-2 has-text-centered">Screen too small!</h2>
+  {/if}{#if fields && cellWidth}
+  <svg width="{screenWidth}" height="{screenWidth}">
+    {#each fields as field} <rect height="{cellWidth}" width="{cellWidth}"
+    class:alive="{state(field)}" x="{cellWidth * col(field) + 1}" y="{cellWidth
+    * row(field) + 1}" on:click={() => dispatch("flip", [row(field),
+    col(field)])} /> {/each}
+  </svg>
   {/if}
 </section>
 
@@ -27,67 +130,3 @@
     fill: #00d1b2;
   }
 </style>
-
-<script>
-  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
-  import Explanation from "./Explanation.html"
-
-  /*** Default Component Interface ***/
-  export let fields, screenWidth, cellWidth
-
-  /*** events ***/
-  const dispatch = createEventDispatcher()
-  beforeUpdate(() => dispatch("startMeasure"))
-  afterUpdate(() => dispatch("endMeasure"))
-</script>
-
-<script context="module">
-  import * as u from "./common/Util.html"
-  import { createField } from "./Field.html"
-
-  /*** Neighborhood ***/
-  const _mx = [-1, 0, 1],
-    Neighborhood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
-
-  export const createBoard = (dimension = 0) => {
-    let generation
-    //
-    const size = dimension ** 2,
-      fields = u.fillArray(size, createField, dimension),
-      _index = obj => (row, col) => obj[row * dimension + col],
-      _field = (row, col) => _index(fields)(row, col),
-      _state = (row, col) => _field(row, col).stat.state(),
-      clear = () => void (generation = 0),
-      inc = () => void ++generation,
-      //
-      _getNextStates = () =>
-        u.pusher(fields)(field =>
-          field.nextState(u.propCounter(Neighborhood)(_checkAlive, field.stat))
-        ),
-      //
-      _checkAlive = (ngb, { row, col }) =>
-        _checkBorder((row += ngb[0])) &&
-        _checkBorder((col += ngb[1])) &&
-        _state(row, col),
-      //
-      _checkBorder = value => u.checkLimit(value, dimension),
-      //
-      _fieldCount = (prop, state) => u.objCounter(fields)(prop, state)
-    //
-    /*** Component Interface ***/
-    return {
-      // static getters ---------------------
-      size,
-      fields,
-      // dynamic getters --------------------
-      generation: () => generation,
-      countState: state => _fieldCount("hasState", state),
-      countChangedState: state => _fieldCount("hasChangedState", state),
-      // setters ----------------------------
-      clear,
-      create: () => (u.runner(fields)("setRandom"), clear()),
-      next: () => (u.mapper(fields)("setState", _getNextStates()), inc()),
-      flip: index => _field(...index).flip()
-    }
-  }
-</script>

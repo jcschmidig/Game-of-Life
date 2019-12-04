@@ -1,38 +1,22 @@
 <script context="module">
-  /*** field states ***/
-  export const fState = { alive: true, dead: false }
-  //
-  export const createField = (pos, dimension) => {
-    let _state = fState.dead,
-      _prevState = _state
+  const cState = { dead: false, alive: true }
+  const c = { row: 0, col: 1, state: 2 }
+
+  export const create = (row = 0, col = 0, state = cState.dead) => [
+      row,
+      col,
+      state
+    ],
     //
-    const row = ~~(pos / dimension),
-      col = pos % dimension || 0,
-      //
-      hasChanged = () => _state ^ _prevState,
-      hasState = state => _state === state,
-      hasChangedState = state => hasState(state) && hasChanged(),
-      nextState = count => (count === 4 ? _state : count === 3),
-      //
-      _set = (state = fState.dead, prevState = state) =>
-        void ((_state = state), (_prevState = prevState)),
-      _changeTo = state => _set(state, _state)
+    row = field => field[c.row],
+    col = field => field[c.col],
+    state = field => field[c.state],
+    prop = field => ({ row: row(field), col: col(field), state: state(field) }),
     //
-    // Component Interface
-    return {
-      //
-      // static getters
-      stat: { row, col, state: () => _state },
-      // dynamic getters ----------------
-      hasState,
-      hasChanged,
-      hasChangedState,
-      nextState,
-      // setters ------------------------
-      setState: state => _changeTo(state),
-      setEmpty: () => _set(),
-      setRandom: () => _changeTo(Math.random() * 6 > 4),
-      flip: () => _changeTo(!_state)
-    }
-  }
+    setState = (field, newState, oldState = state(field)) => (
+      (field[c.state] = newState), oldState
+    ),
+    setRandom = field => setState(field, Math.random() * 6 > 4),
+    flipState = field => setState(field, !state(field)),
+    nextState = (state, count) => (count === 4 ? state : count === 3)
 </script>

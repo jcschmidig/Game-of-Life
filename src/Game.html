@@ -30,8 +30,6 @@
 
 <script>
   import { blank, zero } from "./common/Util.html"
-  import { fState } from "./Field.html"
-  const { alive, dead } = fState
 
   /*** Default Component Interface ***/
   export let status, calcTitle, calcDiff, showTitle, showDiff
@@ -39,12 +37,12 @@
   /*** Observables ***/
   let _alive, _dead, _birth, _death, _total, _counter, _nextEnabled
   $: if (status) {
-    _alive = status.countState(alive)
-    _dead = status.size - _alive
-    _birth = status.countChangedState(alive)
-    _death = status.countChangedState(dead)
+    _alive = status.countAlive()
+    _dead = status.countDead()
+    _birth = status.countBirth()
+    _death = status.countDeath()
     _total = _birth + _death
-    _counter = status.generation
+    _counter = status.generation()
     _nextEnabled = _alive && _total
   }
 </script>

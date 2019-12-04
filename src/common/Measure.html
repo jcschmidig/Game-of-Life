@@ -1,10 +1,12 @@
 <script context="module">
   export const createMeasure = title => {
-    let _start
+    let _time
     //
     const _now = () => window.performance.now(),
-      start = (act, ...a) => ((_start = _now()), act && (act(...a), stop())),
-      stop = start => ~~((_now() - (start || _start)) * 1000) / 1000
+      start = (action, ...arg) => (
+        (_time = _now()), action && (action(...arg), stop())
+      ),
+      stop = time => ~~((_now() - (time || _time)) * 1000) / 1000
     //
     /*** Component Interface ***/
     return {
