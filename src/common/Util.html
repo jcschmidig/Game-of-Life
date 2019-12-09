@@ -20,8 +20,11 @@
     //
     mapper = obj => (action, arr) => obj.map((o, idx) => o[action](arr[idx])),
     //
-    fillArray = (size, action, ...args) =>
-      Array.from({ length: size }, (_, idx) => action && action(idx, ...args)),
+    fillArray = size => (action, index, ...arg) =>
+      Array.from(
+        { length: size },
+        (_, idx) => action && action(index(idx), ...arg)
+      ),
     //
     setFocus = async element =>
       void (await tick(), document.getElementById(element).focus()),

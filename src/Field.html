@@ -1,22 +1,11 @@
 <script context="module">
-  const cState = { dead: false, alive: true }
-  const c = { row: 0, col: 1, state: 2 }
-
-  export const create = (row = 0, col = 0, state = cState.dead) => [
+  export const create = ({ row = 0, col = 0 }, state = false) => ({
       row,
       col,
       state
-    ],
-    //
-    row = field => field[c.row],
-    col = field => field[c.col],
-    state = field => field[c.state],
-    prop = field => ({ row: row(field), col: col(field), state: state(field) }),
-    //
-    setState = (field, newState, oldState = state(field)) => (
-      (field[c.state] = newState), oldState
-    ),
-    setRandom = field => setState(field, Math.random() * 6 > 4),
-    flipState = field => setState(field, !state(field)),
-    nextState = (state, count) => (count === 4 ? state : count === 3)
+    }),
+    random = field => create(field, Math.random() * 6 > 4),
+    flip = field => create(field, !field.state),
+    next = (field, count) =>
+      create(field, count === 4 ? field.state : count === 3)
 </script>

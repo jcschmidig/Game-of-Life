@@ -6,78 +6,81 @@
   const _mx = [-1, 0, 1],
     Neighborhood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
 
+  const createStat = size => {
+    let birth = 0,
+      death = 0,
+      alive = 0
+    //
+    const calc = (newState, oldState) => {
+      if (newState === oldState) return
+      //
+      birth += +newState
+      death += +oldState
+      alive += +newState - oldState
+    }
+    //
+    return {
+      birth: () => birth,
+      death: () => death,
+      alive: () => alive,
+      dead: () => size - alive,
+      reset: () => void (birth = death = 0),
+      calc
+    }
+  }
+
   export const createBoard = (dimension = 0) => {
     const size = dimension ** 2,
-      _index = idx => [~~(idx / dimension), idx % dimension]
-    let generation, nbAlive, nbBirth, nbDeath
-    let fields = Array.from({ length: size }, (_, idx) =>
-      f.create(..._index(idx))
-    )
+      stat = createStat(size),
+      _index = (row, col) => row * dimension + col,
+      _coord = idx => ({ row: ~~(idx / dimension), col: idx % dimension })
+    let fields,
+      generation = 0
     //
-    const clear = () => void (generation = nbAlive = nbBirth = nbDeath = 0),
-      _field = (row, col) => fields[row * dimension + col],
-      _state = (row, col) => f.state(_field(row, col)),
-      //
-      _nextStates = (row, col, state) =>
-        fields.map(
-          field => (
-            ({ row, col, state } = f.prop(field)),
-            f.create(
-              row,
-              col,
-              _calcChange(
-                state,
-                f.nextState(
-                  state,
-                  u.propCounter(Neighborhood)(_checkAlive, { row, col })
-                )
-              )
-            )
-          )
-        ),
+    const _field = (row, col) => fields[_index(row, col)],
+      _set = ({ row, col }, field) => void (fields[_index(row, col)] = field),
       //
       _checkAlive = (ngb, { row, col }) =>
-        _checkBorder((row += ngb[0])) &&
-        _checkBorder((col += ngb[1])) &&
-        _state(row, col),
+        u.checkLimit((row += ngb[0]), dimension) &&
+        u.checkLimit((col += ngb[1]), dimension) &&
+        _field(row, col).state,
       //
-      _checkBorder = value => u.checkLimit(value, dimension),
+      _newField = (field, action, arg) => {
+        const newField = action(field, arg)
+        stat.calc(newField.state, field.state || false)
+        return newField
+      },
       //
-      create = () =>
-        void (clear(),
-        fields.map(field => _process(field, f.setRandom)),
-        (nbAlive = nbBirth)),
+      clear = () => {
+        fields = u.fillArray(size)(f.create, _coord)
+      },
       //
-      next = () =>
-        void ((nbBirth = nbDeath = 0),
-        (fields = _nextStates()),
-        ++generation,
-        (nbAlive += nbBirth - nbDeath)),
+      create = () => {
+        fields = u.fillArray(size)(_newField, _coord, f.random)
+      },
       //
-      flip = (index, newState) =>
-        void ((newState = _process(_field(...index), f.flipState)),
-        (nbAlive += newState ? +1 : -1)),
+      next = () => {
+        generation += 1
+        stat.reset()
+        fields = fields.map(field =>
+          _newField(
+            field,
+            f.next,
+            u.propCounter(Neighborhood)(_checkAlive, field)
+          )
+        )
+      },
       //
-      _process = (field, action) => _calcChange(action(field), f.state(field)),
-      //
-      _calcChange = (state, nextState, change) => (
-        (change = state !== nextState),
-        (nbBirth += change * nextState),
-        (nbDeath += change * !nextState),
-        nextState
-      )
+      flip = field => _set(field, _newField(field, f.flip))
     //
     /*** Component Interface ***/
     return {
       // static getters ---------------------
       length: dimension,
+      stat,
       // dynamic getters --------------------
       generation: () => generation,
       fields: () => fields,
-      countAlive: () => nbAlive,
-      countDead: () => size - nbAlive,
-      countBirth: () => nbBirth,
-      countDeath: () => nbDeath,
       // setters ----------------------------
       clear,
       create,
@@ -89,7 +92,6 @@
 
 <script>
   import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
-  import { row, col, state } from "./Field.html"
   import Explanation from "./Explanation.html"
 
   /*** Default Component Interface ***/
@@ -109,9 +111,8 @@
   {/if}{#if fields && cellWidth}
   <svg width="{screenWidth}" height="{screenWidth}">
     {#each fields as field} <rect height="{cellWidth}" width="{cellWidth}"
-    class:alive="{state(field)}" x="{cellWidth * col(field) + 1}" y="{cellWidth
-    * row(field) + 1}" on:click={() => dispatch("flip", [row(field),
-    col(field)])} /> {/each}
+    class:alive="{field.state}" x="{cellWidth * field.col + 1}" y="{cellWidth *
+    field.row + 1}" on:click={() => dispatch("flip", field)} /> {/each}
   </svg>
   {/if}
 </section>

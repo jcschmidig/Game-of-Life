@@ -43,7 +43,7 @@
   let dimension = defDimension
 
   /*** Events ***/
-  const keyEnter = (ev, key = ev.which) => key === 13 && createBoard(),
+  const keyEnter = event => event.which === 13 && createBoard(),
     checkDimension = (ev, dim = ev.target.value) =>
       void (dimension = checkMinMax(dim, dimMin, dimMax)),
     //

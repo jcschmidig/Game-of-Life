@@ -37,10 +37,10 @@
   /*** Observables ***/
   let _alive, _dead, _birth, _death, _total, _counter, _nextEnabled
   $: if (status) {
-    _alive = status.countAlive()
-    _dead = status.countDead()
-    _birth = status.countBirth()
-    _death = status.countDeath()
+    _alive = status.stat.alive()
+    _dead = status.stat.dead()
+    _birth = status.stat.birth()
+    _death = status.stat.death()
     _total = _birth + _death
     _counter = status.generation()
     _nextEnabled = _alive && _total
