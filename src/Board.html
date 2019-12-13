@@ -41,19 +41,6 @@
   }
 </script>
 
-<script>
-  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
-  import Explanation from "./Explanation.html"
-
-  /*** Default Component Interface ***/
-  export let fields, screenWidth, cellWidth
-
-  /*** events ***/
-  const dispatch = createEventDispatcher()
-  beforeUpdate(() => dispatch("startMeasure"))
-  afterUpdate(() => dispatch("endMeasure"))
-</script>
-
 <section class="container box">
   {#if !fields}
   <Explanation />
@@ -77,8 +64,29 @@
     display: block;
     margin: auto;
     fill: #ddd;
+    cursor: zoom-in;
   }
   rect.alive {
     fill: #00d1b2;
+    cursor: zoom-out;
+  }
+  rect:hover {
+    fill: darkgray;
+  }
+  rect.alive:hover {
+    fill: lightgreen;
   }
 </style>
+
+<script>
+  import { createEventDispatcher, beforeUpdate, afterUpdate } from "svelte"
+  import Explanation from "./Explanation.html"
+
+  /*** Default Component Interface ***/
+  export let fields, screenWidth, cellWidth
+
+  /*** events ***/
+  const dispatch = createEventDispatcher()
+  beforeUpdate(() => dispatch("startMeasure"))
+  afterUpdate(() => dispatch("endMeasure"))
+</script>

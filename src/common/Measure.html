@@ -1,5 +1,5 @@
 <script context="module">
-  import { zero } from "../common/Util.html"
+  import { zero } from "./Util.html"
   export const createMeasure = title => {
     let _startTime
     //
@@ -18,4 +18,11 @@
       measure
     }
   }
+</script>
+
+<span class="tag is-medium is-info">{title}: {blank(diff)}ms</span>
+
+<script>
+  import { blank } from "./Util.html"
+  export let title, diff
 </script>

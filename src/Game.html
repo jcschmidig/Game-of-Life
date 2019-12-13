@@ -10,12 +10,12 @@
   </button>
   <span class="tag is-medium is-success is-light">Birth: {blank(_birth)}</span>
   <span class="tag is-medium is-danger is-light">Dead: {blank(_dead)}</span>
-  <span class="tag is-medium is-info">{calcTitle}: {blank(calcDiff)}ms</span>
+  <Measure title="{calcTitle}" diff="{calcDiff}" />
   <span class="tag is-medium is-danger is-light">Death: {blank(_death)}</span>
   <span class="tag is-medium is-info is-light"
     >Total: {blank(_alive + _dead)}</span
   >
-  <span class="tag is-medium is-info">{showTitle}: {blank(showDiff)}ms</span>
+  <Measure title="{showTitle}" diff="{showDiff}" />
   <span class="tag is-medium is-info is-light">Total: {blank(_total)}</span>
 </section>
 
@@ -29,6 +29,7 @@
 </style>
 
 <script>
+  import Measure from "./common/Measure.html"
   import { blank, zero } from "./common/Util.html"
 
   /*** Default Component Interface ***/
