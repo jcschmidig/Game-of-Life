@@ -1,11 +1,47 @@
 <script context="module">
-  export const create = ({ row = 0, col = 0 }, state = false) => ({
-      row,
-      col,
-      state
-    }),
-    random = field => create(field, Math.random() * 6 > 4),
-    flip = field => create(field, !field.state),
-    next = (field, count) =>
-      create(field, count === 4 ? field.state : count === 3)
+  export const createStat = size => {
+    let birth = 0,
+      death = 0,
+      alive = 0,
+      generation = 0
+    //
+    const create = ({ row = 0, col = 0 }, state = false) => ({
+        row,
+        col,
+        state
+      }),
+      empty = field => create(field),
+      random = field => create(field, Math.random() * 6 > 4),
+      flip = field => create(field, !field.state),
+      next = (field, count) =>
+        create(field, count === 4 ? field.state : count === 3),
+      //
+      _calc = (newState, oldState) => {
+        if (newState === oldState) return
+        //
+        birth += +newState
+        death += +oldState
+        alive += +newState - oldState
+      },
+      //
+      _proc = (field, action, arg, /*private*/ obj) => {
+        _calc((obj = action(field, arg)).state, field.state || false)
+        return obj
+      }
+    //
+    return {
+      stat: {
+        birth: () => birth,
+        death: () => death,
+        alive: () => alive,
+        dead: () => size - alive,
+        generation: () => generation
+      },
+      reset: () => ((birth = death = 0), ++generation),
+      empty: field => _proc(field, empty),
+      random: field => _proc(field, random),
+      next: (field, count) => _proc(field, next, count),
+      flip: field => _proc(field, flip)
+    }
+  }
 </script>

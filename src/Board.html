@@ -1,91 +1,42 @@
 <script context="module">
-  import * as u from "./common/Util.html"
-  import * as f from "./Field.html"
+  import { propCounter, checkLimit } from "./common/Util.html"
+  import { createStat } from "./Field.html"
 
   /*** Neighborhood ***/
   const _mx = [-1, 0, 1],
-    Neighborhood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
-
-  const createStat = size => {
-    let birth = 0,
-      death = 0,
-      alive = 0
-    //
-    const calc = (newState, oldState) => {
-      if (newState === oldState) return
-      //
-      birth += +newState
-      death += +oldState
-      alive += +newState - oldState
-    }
-    //
-    return {
-      birth: () => birth,
-      death: () => death,
-      alive: () => alive,
-      dead: () => size - alive,
-      reset: () => void (birth = death = 0),
-      calc
-    }
-  }
+    NgbHood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
 
   export const createBoard = (dimension = 0) => {
-    const size = dimension ** 2,
-      stat = createStat(size),
-      _index = (row, col) => row * dimension + col,
-      _coord = idx => ({ row: ~~(idx / dimension), col: idx % dimension })
-    let fields,
-      generation = 0
+    let fields = []
     //
-    const _field = (row, col) => fields[_index(row, col)],
-      _set = ({ row, col }, field) => void (fields[_index(row, col)] = field),
+    const _size = dimension ** 2,
+      f = createStat(_size),
+      _index = (row, col) => row * dimension + col,
+      _coord = idx => ({ row: ~~(idx / dimension), col: idx % dimension }),
+      _get = (row, col) => fields[_index(row, col)],
+      _set = ({ row, col }, field) => (fields[_index(row, col)] = field),
       //
+      _fill = action =>
+        Array.from({ length: _size }, (_, idx) => action(_coord(idx))),
+      //
+      _next = () =>
+        fields.map(fld => f.next(fld, propCounter(NgbHood)(_checkAlive, fld))),
       _checkAlive = (ngb, { row, col }) =>
-        u.checkLimit((row += ngb[0]), dimension) &&
-        u.checkLimit((col += ngb[1]), dimension) &&
-        _field(row, col).state,
-      //
-      _newField = (field, action, arg) => {
-        const newField = action(field, arg)
-        stat.calc(newField.state, field.state || false)
-        return newField
-      },
-      //
-      clear = () => {
-        fields = u.fillArray(size)(f.create, _coord)
-      },
-      //
-      create = () => {
-        fields = u.fillArray(size)(_newField, _coord, f.random)
-      },
-      //
-      next = () => {
-        generation += 1
-        stat.reset()
-        fields = fields.map(field =>
-          _newField(
-            field,
-            f.next,
-            u.propCounter(Neighborhood)(_checkAlive, field)
-          )
-        )
-      },
-      //
-      flip = field => _set(field, _newField(field, f.flip))
+        _cL((row += ngb[0])) && _cL((col += ngb[1])) && _get(row, col).state,
+      _cL = value => checkLimit(value, dimension)
     //
     /*** Component Interface ***/
     return {
       // static getters ---------------------
       length: dimension,
-      stat,
+      stat: f.stat,
       // dynamic getters --------------------
-      generation: () => generation,
       fields: () => fields,
       // setters ----------------------------
-      clear,
-      create,
-      next,
-      flip
+      clear: () => (fields = _fill(f.empty)),
+      create: () => (fields = _fill(f.random)),
+      next: () => (f.reset(), (fields = _next())),
+      flip: field => _set(field, f.flip(field))
     }
   }
 </script>

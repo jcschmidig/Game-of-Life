@@ -16,7 +16,7 @@
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^5.1.2",
     "sirv-cli": "^0.4.4",
-    "svelte": "^3.16.0"
+    "svelte": "^3.16.4"
   },
   "scripts": {
     "lint": "eslint --fix --quiet src --ext .js,.html",

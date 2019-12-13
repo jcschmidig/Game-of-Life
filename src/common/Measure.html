@@ -1,12 +1,12 @@
 <script context="module">
+  import { zero } from "../common/Util.html"
   export const createMeasure = title => {
-    let _time
+    let _startTime
     //
     const _now = () => window.performance.now(),
-      start = (action, ...arg) => (
-        (_time = _now()), action && (action(...arg), stop())
-      ),
-      stop = time => ~~((_now() - (time || _time)) * 1000) / 1000
+      start = () => void (_startTime = _now()),
+      stop = () => ~~((_now() - zero(_startTime)) * 1000) / 1000,
+      measure = (action, ...arg) => (start(), action(...arg), stop())
     //
     /*** Component Interface ***/
     return {
@@ -14,7 +14,8 @@
       title,
       // setters
       start,
-      stop
+      stop,
+      measure
     }
   }
 </script>

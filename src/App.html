@@ -7,7 +7,7 @@
 	by jean-claude@schmidig.email
 -->
 <section class="section container">
-  <h1 class="title is-1 has-text-centered">
+  <h1 class="title is-3 is-size-2-tablet is-size-1-desktop has-text-centered">
     <a
       href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life"
       target="_blank"
@@ -24,7 +24,7 @@
   on:create="{create}"
 />
 <Game
-  status="{board}"
+  {status}
   calcTitle="{calc.title}"
   {calcDiff}
   showTitle="{show.title}"
@@ -46,20 +46,21 @@
   import Board, { createBoard } from "./Board.html"
   import { createMeasure } from "./common/Measure.html"
   //
+  let board, fields, cellWidth, screenWidth, showDiff, calcDiff, status
   const [defDimension, dimMin, dimMax] = [15, 3, 1000],
     markOffset = "idOffset",
     calc = createMeasure("Calc"),
     show = createMeasure("Display"),
-    mCalc = (action, ...arg) => void (calcDiff = calc.start(action, ...arg))
+    mCalc = (action, ...arg) => (calcDiff = calc.measure(action, ...arg))
 
   /*** Observables ***/
-  let board, fields, cellWidth, screenWidth, showDiff, calcDiff
   $: if (board) {
     fields = board.fields()
     cellWidth = ~~(
       document.getElementById(markOffset).offsetWidth / board.length
     )
     screenWidth = cellWidth * board.length
+    status = board.stat
   }
 
   /*** events ***/
@@ -74,5 +75,5 @@
     // Propagated by component Board
     flip = evt("flip"),
     startMeasure = () => void show.start(),
-    endMeasure = () => void (showDiff = show.stop())
+    endMeasure = () => (showDiff = show.stop())
 </script>
