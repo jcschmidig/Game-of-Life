@@ -20,9 +20,10 @@
   }
 </script>
 
-<span class="tag is-medium is-info">{title}: {blank(diff)}ms</span>
+<Info type="info" text="{title}: {blank(diff)}ms" />
 
 <script>
+  import Info from "./Info.html"
   import { blank } from "./Util.html"
   export let title, diff
 </script>
