@@ -1,5 +1,5 @@
 <script context="module">
-  export const createStat = size => {
+  export const createStat = dimension => {
     let birth = 0,
       death = 0,
       alive = 0,
@@ -34,7 +34,7 @@
         birth: () => birth,
         death: () => death,
         alive: () => alive,
-        dead: () => size - alive,
+        dead: () => dimension ** 2 - alive,
         generation: () => generation
       },
       reset: () => ((birth = death = 0), ++generation),

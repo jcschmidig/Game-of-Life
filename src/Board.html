@@ -6,18 +6,18 @@
   const _mx = [-1, 0, 1],
     NgbHood = Array.from(_mx, x => Array.from(_mx, y => [x, y])).flat()
 
-  export const createBoard = (dimension = 0) => {
-    let fields = []
+  export const createBoard = () => {
+    let [fields, dimension, f] = [[], 0, {}]
     //
-    const _size = dimension ** 2,
-      f = createStat(_size),
-      _index = (row, col) => row * dimension + col,
+    const _index = (row, col) => row * dimension + col,
       _coord = idx => ({ row: ~~(idx / dimension), col: idx % dimension }),
       _get = (row, col) => fields[_index(row, col)],
       _set = ({ row, col }, field) => (fields[_index(row, col)] = field),
       //
-      _fill = action =>
-        Array.from({ length: _size }, (_, idx) => action(_coord(idx))),
+      _fill = (dim, action) => (
+        ([dimension, f] = [dim, createStat(dim)]),
+        Array.from({ length: dim ** 2 }, (_, i) => f[action](_coord(i)))
+      ),
       //
       _next = () =>
         fields.map(fld => f.next(fld, propCounter(NgbHood)(_checkAlive, fld))),
@@ -27,14 +27,13 @@
     //
     /*** Component Interface ***/
     return {
-      // static getters ---------------------
-      length: dimension,
-      stat: f.stat,
       // dynamic getters --------------------
+      length: () => dimension,
       fields: () => fields,
+      stat: () => f.stat,
       // setters ----------------------------
-      clear: () => (fields = _fill(f.empty)),
-      create: () => (fields = _fill(f.random)),
+      clear: dim => (fields = _fill(dim, "empty")),
+      create: dim => (fields = _fill(dim, "random")),
       next: () => (f.reset(), (fields = _next())),
       flip: field => _set(field, f.flip(field))
     }
@@ -42,7 +41,7 @@
 </script>
 
 <section class="container box">
-  {#if !fields}
+  {#if !length}
   <Explanation />
   {:else if !cellWidth}
   <h2 class="title is-3 is-size-2-tablet has-text-centered">
@@ -85,7 +84,7 @@
   import Explanation from "./Explanation.html"
 
   /*** Default Component Interface ***/
-  export let fields, screenWidth, cellWidth
+  export let length, fields, screenWidth, cellWidth
 
   /*** events ***/
   const dispatch = createEventDispatcher()

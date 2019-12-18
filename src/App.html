@@ -32,6 +32,7 @@
   on:click="{next}"
 />
 <Board
+  {length}
   {fields}
   {screenWidth}
   {cellWidth}
@@ -46,30 +47,27 @@
   import Board, { createBoard } from "./Board.html"
   import { createMeasure } from "./common/Measure.html"
   //
-  let board, fields, cellWidth, screenWidth, showDiff, calcDiff, status
+  let board = createBoard()
+  let length, fields, cellWidth, screenWidth, showDiff, calcDiff, status
+  //
   const [defDimension, dimMin, dimMax] = [15, 3, 1000],
     markOffset = "idOffset",
-    calc = createMeasure("Calc"),
     show = createMeasure("Display"),
-    mCalc = (action, ...arg) => (calcDiff = calc.measure(action, ...arg))
-
+    calc = createMeasure("Calc")
   /*** Observables ***/
-  $: if (board) {
+  $: if ((length = board.length())) {
     fields = board.fields()
-    cellWidth = ~~(
-      document.getElementById(markOffset).offsetWidth / board.length
-    )
-    screenWidth = cellWidth * board.length
-    status = board.stat
+    status = board.stat()
+    cellWidth = ~~(document.getElementById(markOffset).offsetWidth / length)
+    screenWidth = cellWidth * length
   }
-
   /*** events ***/
-  const evt = (action, newBoard = false) => (event, prop = event.detail) =>
-      mCalc((board = (newBoard && createBoard(prop)) || board)[action], prop),
+  const evt = action => event =>
+      (calcDiff = calc.measure((board = board)[action], event.detail)),
     //
     // Propagated by component Start
-    clear = evt("clear", true),
-    create = evt("create", true),
+    clear = evt("clear"),
+    create = evt("create"),
     // Propagated by component Game
     next = evt("next"),
     // Propagated by component Board
