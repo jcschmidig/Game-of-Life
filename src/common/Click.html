@@ -1,0 +1,10 @@
+<button class="button is-primary" id="{id}" disabled="{!enabled}" on:click>
+  {blank(text)}
+</button>
+
+<script>
+  import { blank } from "./Util.html"
+  export let id = "",
+    enabled = true,
+    text
+</script>

@@ -13,10 +13,8 @@
       on:change="{checkDimension}"
     />
   </div>
-  <button class="button is-primary" on:click="{createBoard}">
-    Create Board
-  </button>
-  <button class="button is-primary" on:click="{clearBoard}">Clear Board</button>
+  <Click text="Create Board" on:click="{createBoard}" />
+  <Click text="Clear Board" on:click="{clearBoard}" />
 </section>
 
 <style>
@@ -33,6 +31,7 @@
 
 <script>
   import { createEventDispatcher, onMount } from "svelte"
+  import Click from "./common/Click.html"
   import { setFocus, checkMinMax } from "./common/Util.html"
 
   /*** Default Component Interface ***/
@@ -48,13 +47,10 @@
       void (dimension = checkMinMax(dim, dimMin, dimMax)),
     //
     dispatch = createEventDispatcher(),
-    evt = (action, focus) =>
-      void (setFocus(focus), dispatch(action, dimension)),
+    evt = (action, focus) => (setFocus(focus), dispatch(action, dimension)),
     createBoard = () => evt("create", "next"),
     clearBoard = () => evt("clear", "dim")
   //
   // set the focus to the input element within the start of the page
-  onMount(() => {
-    setFocus("dim")
-  })
+  onMount(() => setFocus("dim"))
 </script>

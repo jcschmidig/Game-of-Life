@@ -1,13 +1,6 @@
 <section class="container box">
   <Info type="success" text="Alive: {blank(_alive)}" />
-  <button
-    class="button is-primary"
-    id="next"
-    disabled="{!_nextEnabled}"
-    on:click
-  >
-    + Generation ({zero(_counter)})
-  </button>
+  <Click id="next" {enabled} text="+ Generation ({zero(_counter)})" on:click />
   <Info type="success" text="Birth: {blank(_birth)}" />
   <Info type="danger" text="Dead: {blank(_dead)}" />
   <Measure title="{calcTitle}" diff="{calcDiff}" />
@@ -27,6 +20,7 @@
 </style>
 
 <script>
+  import Click from "./common/Click.html"
   import Measure from "./common/Measure.html"
   import Info from "./common/Info.html"
   import { blank, zero } from "./common/Util.html"
@@ -35,7 +29,8 @@
   export let status, calcTitle, calcDiff, showTitle, showDiff
 
   /*** Observables ***/
-  let _alive, _dead, _birth, _death, _total, _counter, _nextEnabled
+  let _alive, _dead, _birth, _death, _total, _counter
+  let enabled = false
   $: if (status) {
     _alive = status.alive()
     _dead = status.dead()
@@ -43,6 +38,6 @@
     _death = status.death()
     _total = _birth + _death
     _counter = status.generation()
-    _nextEnabled = _alive && _total
+    enabled = _alive && _total
   }
 </script>

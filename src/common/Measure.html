@@ -1,4 +1,5 @@
 <script context="module">
+  import Info from "./Info.html"
   import { zero, blank } from "./Util.html"
   export const createMeasure = title => {
     let _startTime
@@ -23,6 +24,5 @@
 <Info text="{title}: {blank(diff)}ms" />
 
 <script>
-  import Info from "./Info.html"
   export let title, diff
 </script>
